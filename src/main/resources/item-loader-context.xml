@@ -11,8 +11,8 @@
         <property name="insertItemSql">
             <value>
                 <![CDATA[
-                    INSERT INTO item (NAME, PRICE)
-                    VALUES (:name, :price)
+                    INSERT INTO item (ID, NAME, PRICE)
+                    VALUES (:id, :name, :price)
                 ]]>
             </value>
         </property>

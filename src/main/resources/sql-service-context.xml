@@ -13,9 +13,10 @@
                 <![CDATA[
                     CREATE TABLE IF NOT EXISTS item
                         (
+                            ID     INT           NOT NULL,
                             NAME   VARCHAR(255)  NOT NULL,
                             PRICE  DECIMAL       NOT NULL,
-                            PRIMARY KEY (NAME)
+                            PRIMARY KEY (ID)
                         )
                 ]]>
             </value>
@@ -32,6 +33,35 @@
                             ORDERNO     INT         NULL,
                             TIMESTAMP   TIMESTAMP   NOT NULL,
                             PRIMARY KEY (ID)
+                        )
+                ]]>
+            </value>
+        </property>
+        <!-- TODO: Discuss whether we feel we need to add extended price to the table, or just recalculate it as needed -->
+        <property name="createOrderLineItemTableSql">
+            <value>
+                <![CDATA[
+                    CREATE TABLE IF NOT EXISTS order_line_item
+                        (
+                            ORDER_ID    INT             NOT NULL,
+                            ITEM_ID     VARCHAR(255)    NOT NULL,
+                            QTY         INT             NOT NULL,
+                            PRICE       DECIMAL         NOT NULL,
+                            PRIMARY KEY (ORDER_ID, ITEM_ID)
+                        )
+                ]]>
+            </value>
+        </property>
+        <property name="createTenderRecordTableSql">
+            <value>
+                <![CDATA[
+                    CREATE TABLE IF NOT EXISTS tender_record
+                        (
+                            ORDER_ID    INT             NOT NULL,
+                            AMOUNT      DECIMAL         NOT NULL,
+                            CHANGE_AMT  DECIMAL         NOT NULL,
+                            TIMESTAMP   TIMESTAMP      NOT NULL,
+                            PRIMARY KEY (ORDER_ID)
                         )
                 ]]>
             </value>

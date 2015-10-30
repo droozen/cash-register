@@ -58,13 +58,15 @@ public class ItemLoader {
         }
 
         String line;
+        int count = 0;
         while (StringUtils.isEmpty(line = resource.readBlock()) == false) {
             String[] split = line.split(",");
             if (split.length != 2) throw new RuntimeException("Invalid file format");
             if (!NumberUtils.isNumber(split[1].trim()))
                 throw new RuntimeException("Invalid file format. Price must be number.");
 
-            items.add(new Item(split[0].trim(), Double.parseDouble(split[1].trim())));
+            items.add(new Item(count, split[0].trim(), Double.parseDouble(split[1].trim())));
+            count++;
         }
 
         resource.close();
@@ -81,6 +83,12 @@ public class ItemLoader {
         }
     }
 
+    /**
+     * This schema assumes all items are new.
+     * If we need to consider updates, we'll need to extend our approach.
+     *
+     * @param items
+     */
     private void writeItemsToDatabse(Collection<Item> items) {
         Map<String, Object>[] batchParams = new HashMap[items.size()];
 
@@ -95,6 +103,7 @@ public class ItemLoader {
 
     private Map<String, Object> getParams(Item item) {
         Map<String, Object> params = new HashMap<>();
+        params.put("id", item.getId());
         params.put("name", item.getName());
         params.put("price", item.getPrice());
         return params;

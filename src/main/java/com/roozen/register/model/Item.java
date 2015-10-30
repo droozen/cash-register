@@ -2,15 +2,21 @@ package com.roozen.register.model;
 
 public class Item implements Comparable {
 
+    private int id;
     private String name;
 
     // TODO: Consider using BigDecimal or a custom object for all money fields to perform proper money calculations
     // Though that may not be needed for this simple demonstration.
     private double price;
 
-    public Item(String name, double price) {
+    public Item(int id, String name, double price) {
+        this.id = id;
         this.name = name;
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -28,24 +34,20 @@ public class Item implements Comparable {
 
         Item item = (Item) o;
 
-        if (Double.compare(item.price, price) != 0) return false;
-        return !(name != null ? !name.equals(item.name) : item.name != null);
+        return id == item.id;
+
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = name != null ? name.hashCode() : 0;
-        temp = Double.doubleToLongBits(price);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return id;
     }
 
     @Override
     public String toString() {
         return "Item{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';
     }

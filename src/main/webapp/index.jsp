@@ -15,7 +15,7 @@
             <div style="width: 300px; display: table-cell;">
 
                 <div ng-repeat="theItem in myData.items">
-                    <a ng-click="selectItem('{{theItem.name}}')">
+                    <a ng-click="selectItem(theItem.id)">
                         {{theItem.name}}, {{theItem.price}}
                     </a>
                 </div>
@@ -67,9 +67,14 @@
                 )
 
                 $scope.selectItem = function (itemSelected) {
-                    $http.get('/controller/order/select', {order: $scope.orderData.orderId, item: itemSelected}).then(
+                    $http.get('/controller/order/select/item', {
+                        params: {
+                            order: $scope.orderData.orderId,
+                            item: itemSelected
+                        }
+                    }).then(
                             function (response) {
-                                $scope.myData.order.items = response.data;
+                                $scope.orderData = response.data;
                             }
                     );
                 };

@@ -14,6 +14,8 @@ public class SqlService {
 
     private String createItemTableSql;
     private String createOrderTableSql;
+    private String createOrderLineItemTableSql;
+    private String createTenderRecordTableSql;
 
     public void setCreateItemTableSql(String createItemTableSql) {
         this.createItemTableSql = createItemTableSql;
@@ -21,6 +23,14 @@ public class SqlService {
 
     public void setCreateOrderTableSql(String createOrderTableSql) {
         this.createOrderTableSql = createOrderTableSql;
+    }
+
+    public void setCreateOrderLineItemTableSql(String createOrderLineItemTableSql) {
+        this.createOrderLineItemTableSql = createOrderLineItemTableSql;
+    }
+
+    public void setCreateTenderRecordTableSql(String createTenderRecordTableSql) {
+        this.createTenderRecordTableSql = createTenderRecordTableSql;
     }
 
     // TODO: This should be tested, preferably in a automated way where we could install/create a new database, run init,
@@ -34,6 +44,10 @@ public class SqlService {
         try {
             createItemTable();
             createOrderTable();
+            createOrderLineItemTable();
+            createTenderRecordTable();
+
+            System.out.println("Database Initialized");
         } catch (SQLException e) {
             logSqlException(e);
             return;
@@ -46,6 +60,14 @@ public class SqlService {
 
     private void createOrderTable() throws SQLException {
         jdbcTemplate.execute(createOrderTableSql);
+    }
+
+    private void createOrderLineItemTable() throws SQLException {
+        jdbcTemplate.execute(createOrderLineItemTableSql);
+    }
+
+    private void createTenderRecordTable() throws SQLException {
+        jdbcTemplate.execute(createTenderRecordTableSql);
     }
 
     private void logSqlException(SQLException e) {

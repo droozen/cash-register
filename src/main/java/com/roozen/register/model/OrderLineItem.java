@@ -17,16 +17,29 @@ public class OrderLineItem {
 
         this.type = type;
         this.price = type.getPrice();
-        this.extendedPrice = type.getPrice();
+        this.extendedPrice = 0.00;
+    }
+
+    public OrderLineItem(Item type, int qty, double price) {
+        if (type == null) {
+            throw new NullPointerException("Cannot instantiate a line item with null object");
+        }
+
+        this.qty = qty;
+        this.type = type;
+        this.price = price;
+        this.extendedPrice = this.qty * this.price;
     }
 
     public void add() {
         this.qty = this.qty + 1;
+        this.extendedPrice = this.qty * this.price;
     }
 
     public void remove() {
         if (this.qty > 0) {
             this.qty = this.qty - 1;
+            this.extendedPrice = this.qty * this.price;
         }
     }
 
@@ -44,6 +57,10 @@ public class OrderLineItem {
 
     public String getName() {
         return type.getName();
+    }
+
+    public Item getType() {
+        return type;
     }
 
     @Override
@@ -71,4 +88,5 @@ public class OrderLineItem {
                 ", type=" + type +
                 '}';
     }
+
 }

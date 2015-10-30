@@ -11,7 +11,7 @@
         <property name="findAllItemSql">
             <value>
                 <![CDATA[
-                    SELECT name, price
+                    SELECT id, name, price
                     FROM item
                     ORDER BY name
                 ]]>
@@ -20,9 +20,9 @@
         <property name="findItemSql">
             <value>
                 <![CDATA[
-                    SELECT name, price
+                    SELECT id, name, price
                     FROM item
-                    WHERE name = :name
+                    WHERE id = :id
                 ]]>
             </value>
         </property>

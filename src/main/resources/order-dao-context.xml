@@ -32,6 +32,41 @@
                 ]]>
             </value>
         </property>
+        <property name="findLineItemsSql">
+            <value>
+                <![CDATA[
+                    SELECT oli.order_id, oli.item_id, item.name, oli.qty, oli.price
+                    FROM order_line_item oli
+                    JOIN item item on (item.id = oli.item_id)
+                    WHERE order_id = :id
+                ]]>
+            </value>
+        </property>
+        <property name="findTenderRecordsSql">
+            <value>
+                <![CDATA[
+                    SELECT order_id, amount, change_amt, timestamp
+                    FROM tender_record
+                    WHERE order_id = :id
+                ]]>
+            </value>
+        </property>
+        <property name="deleteLineItemsSql">
+            <value>
+                <![CDATA[
+                    DELETE FROM order_line_item
+                    WHERE order_id = :id
+                ]]>
+            </value>
+        </property>
+        <property name="insertLineItemSql">
+            <value>
+                <![CDATA[
+                    INSERT INTO order_line_item (order_id, item_id, qty, price)
+                    VALUES (:id, :item_id, :qty, :price)
+                ]]>
+            </value>
+        </property>
 
     </bean>
 </beans>

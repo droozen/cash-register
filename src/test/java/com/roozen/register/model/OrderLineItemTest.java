@@ -8,7 +8,7 @@ public class OrderLineItemTest {
 
     @Test
     public void testAddRemove() {
-        Item item = new Item("Pizza", 5.00);
+        Item item = new Item(0, "Pizza", 5.00);
         OrderLineItem lineItem = new OrderLineItem(item);
 
         assertEquals(0, lineItem.getQty());

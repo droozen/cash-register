@@ -21,10 +21,15 @@ public class OrderController {
         return orderDao.createNewOrder();
     }
 
-    @RequestMapping("/select")
+    @RequestMapping("/select/item")
     @ResponseBody
-    public Order selectItem(@RequestParam(value = "order") Integer orderId, @RequestParam(value = "item") String itemName) {
-        orderDao.addItem(orderId, itemName);
+    public Order selectItem(@RequestParam(value = "order") Integer orderId, @RequestParam(value = "item") Integer itemId) {
+        return orderDao.addItem(orderId, itemId);
+    }
+
+    @RequestMapping("/find/order")
+    @ResponseBody
+    public Order findOrder(@RequestParam(value = "order") Integer orderId) {
         return orderDao.findOrder(orderId);
     }
 

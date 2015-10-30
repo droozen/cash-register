@@ -38,11 +38,19 @@ public class Order {
         this.grandTotal = 0.00;
     }
 
+    public void addAllLineItems(Collection<OrderLineItem> items) {
+        for (OrderLineItem lineItem : items) {
+            lineItems.put(lineItem.getType(), lineItem);
+        }
+        calculateTotals();
+    }
+
     public void addLineItem(Item item) {
         if (lineItems.containsKey(item) == false) {
             lineItems.put(item, new OrderLineItem(item));
         }
         lineItems.get(item).add();
+        calculateTotals();
     }
 
     public void removeLineItem(Item item) {
@@ -53,6 +61,29 @@ public class Order {
         if (orderLineItem.getQty() <= 0) {
             lineItems.remove(item);
         }
+        calculateTotals();
+    }
+
+    private void calculateTotals() {
+        calculateSubTotal();
+        calculateTax();
+        calculateGrandTotal();
+    }
+
+    private void calculateSubTotal() {
+        double sum = 0;
+        for (OrderLineItem lineItem : lineItems.values()) {
+            sum += lineItem.getExtendedPrice();
+        }
+        subTotal = sum;
+    }
+
+    private void calculateTax() {
+        // TODO: To add tax
+    }
+
+    private void calculateGrandTotal() {
+        grandTotal = subTotal + totalTax;
     }
 
     public int getOrderId() {
@@ -87,6 +118,10 @@ public class Order {
         return tenderRecord;
     }
 
+    public void setTenderRecord(TenderRecord tenderRecord) {
+        this.tenderRecord = tenderRecord;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -99,4 +134,5 @@ public class Order {
                 ", tenderRecord=" + tenderRecord +
                 '}';
     }
+
 }
