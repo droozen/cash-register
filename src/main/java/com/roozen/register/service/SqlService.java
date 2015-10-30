@@ -18,6 +18,12 @@ public class SqlService {
         this.createItemTableSql = createItemTableSql;
     }
 
+    // TODO: This should be tested, preferably in a automated way where we could install/create a new database, run init,
+    // TODO: then verify the schema, but for the sake of time on a practice project we can skip that for now.
+
+    /**
+     * Initialize the schema for the database needed for the cash-register.
+     */
     public void init() {
 
         try {
