@@ -6,9 +6,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roozen.register.service"})
+@Configuration
+@ImportResource(value = "sql-service-context.xml")
 public class Client {
 
     @Autowired
@@ -19,7 +23,12 @@ public class Client {
         ApplicationContext context = startClient(args);
 
         // Execute commands
-        context.getBean(Client.class).executeCommands(args);
+        try {
+            context.getBean(Client.class).executeCommands(args);
+        } catch (Exception e) {
+            // TODO: Consider a logging framework
+            e.printStackTrace();
+        }
     }
 
     private static ApplicationContext startClient(String[] args) {
@@ -28,7 +37,7 @@ public class Client {
         return app.run(args);
     }
 
-    public void executeCommands(String[] commands) {
+    public void executeCommands(String[] commands) throws Exception {
         String command = commands[0];
         switch (command) {
             case "init":

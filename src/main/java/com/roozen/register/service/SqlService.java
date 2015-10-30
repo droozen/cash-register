@@ -1,35 +1,54 @@
 package com.roozen.register.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.util.ResourceBundle;
+import java.sql.SQLException;
 
 @Service
 public class SqlService {
 
-    private ResourceBundle properties;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
-    private String user;
-    private String password;
-    private String sqlClass;
-    private String jdbcUrl;
+    private String createItemTableSql;
 
-    public SqlService() {
-        properties = ResourceBundle.getBundle("sql");
-        user = properties.getString("mysql.user");
-        password = properties.getString("mysql.password");
-        sqlClass = properties.getString("mysql.class");
-        jdbcUrl = properties.getString("mysql.jdbcUrl");
+    public void setCreateItemTableSql(String createItemTableSql) {
+        this.createItemTableSql = createItemTableSql;
     }
 
     public void init() {
-        System.out.println(sqlClass);
+
+        try {
+            createItemTable();
+        } catch (SQLException e) {
+            System.out.println("Database initialization failed");
+            return;
+        }
     }
 
-    public Connection getConnection() throws Exception {
-        Class.forName(this.sqlClass).newInstance();
-        return null;
+    private void createItemTable() throws SQLException {
+        jdbcTemplate.execute(createItemTableSql);
+    }
+
+    private void logSqlException(SQLException e) {
+        System.out.println(e.getMessage());
+        System.out.println(e.getErrorCode());
+        System.out.println(e.getSQLState());
+        e.printStackTrace();
+    }
+
+    private void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

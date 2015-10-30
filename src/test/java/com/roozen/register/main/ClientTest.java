@@ -15,7 +15,7 @@ public class ClientTest {
     }
 
     @Test
-    public void testInit() {
+    public void testInit() throws Exception {
         final String[] inputCommands = {"init"};
 
         SqlService mockService = EasyMock.createMock(SqlService.class);
