@@ -3,24 +3,29 @@ package com.roozen.register.service;
 import com.roozen.register.model.Item;
 import com.roozen.register.service.resource.Resource;
 import com.roozen.register.service.resource.ResourceFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ItemLoader {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
     ResourceFactory resourceFactory;
+
+    private String insertItemSql;
+
+    public void setInsertItemSql(String insertItemSql) {
+        this.insertItemSql = insertItemSql;
+    }
 
     /**
      * Load items from a file in csv format: name,price
@@ -35,6 +40,15 @@ public class ItemLoader {
         writeItemsToDatabse(items);
     }
 
+    /**
+     * Load items into memory from file.
+     * TODO: How big do we expect the files to be? If it is large enough, we may need to read/write the items in buffered blocks.
+     *
+     * @param fileSource
+     * @param header
+     * @return
+     * @throws Exception
+     */
     private Collection<Item> parseItemsFromFile(String fileSource, boolean header) throws Exception {
         final Set<Item> items = new HashSet<>();
 
@@ -44,13 +58,13 @@ public class ItemLoader {
         }
 
         String line;
-        while ((line = resource.readBlock()) != null) {
+        while (StringUtils.isEmpty(line = resource.readBlock()) == false) {
             String[] split = line.split(",");
             if (split.length != 2) throw new RuntimeException("Invalid file format");
-            if (!NumberUtils.isNumber(split[1]))
+            if (!NumberUtils.isNumber(split[1].trim()))
                 throw new RuntimeException("Invalid file format. Price must be number.");
 
-            items.add(new Item(split[0], Double.parseDouble(split[1])));
+            items.add(new Item(split[0].trim(), Double.parseDouble(split[1].trim())));
         }
 
         resource.close();
@@ -68,6 +82,21 @@ public class ItemLoader {
     }
 
     private void writeItemsToDatabse(Collection<Item> items) {
+        Map<String, Object>[] batchParams = new HashMap[items.size()];
 
+        int index = 0;
+        for (Item item : items) {
+            batchParams[index] = getParams(item);
+            index++;
+        }
+
+        jdbcTemplate.batchUpdate(insertItemSql, batchParams);
+    }
+
+    private Map<String, Object> getParams(Item item) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", item.getName());
+        params.put("price", item.getPrice());
+        return params;
     }
 }

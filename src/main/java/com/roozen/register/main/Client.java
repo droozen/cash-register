@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roozen.register.service"})
 @Configuration
-@ImportResource(value = "sql-service-context.xml")
+@ImportResource(value = {"client-context.xml"})
 public class Client {
 
     @Autowired

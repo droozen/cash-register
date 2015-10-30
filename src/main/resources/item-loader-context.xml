@@ -7,16 +7,12 @@
 
     <context:annotation-config/>
 
-    <bean id="sqlService" class="com.roozen.register.service.SqlService">
-        <property name="createItemTableSql">
+    <bean id="itemLoader" class="com.roozen.register.service.ItemLoader">
+        <property name="insertItemSql">
             <value>
                 <![CDATA[
-                    CREATE TABLE IF NOT EXISTS item
-                        (
-                            NAME   VARCHAR(255)  NOT NULL,
-                            PRICE  DECIMAL       NOT NULL,
-                            PRIMARY KEY (NAME, PRICE)
-                        )
+                    INSERT INTO item (NAME, PRICE)
+                    VALUES (:name, :price)
                 ]]>
             </value>
         </property>

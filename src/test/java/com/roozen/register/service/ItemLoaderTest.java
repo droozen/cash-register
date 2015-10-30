@@ -16,7 +16,7 @@ public class ItemLoaderTest {
 
     @Test
     public void testLoadItems() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        final String[] inputCsv = {"Pizza,5.00", "Sandwich,4.95"};
+        final String[] inputCsv = {"Pizza, 5.00", "Sandwich, 4.95"};
         final String inputFileSource = "myTestFileSource";
         final boolean inputHeader = true;
 
