@@ -17,7 +17,7 @@ public class OrderTest {
         final Item pizza = new Item(pizzaName, 5.00);
         final Item sandwich = new Item(sandwichName, 4.95);
 
-        Order order = new Order();
+        Order order = new Order(0);
         assertTrue("We have line items before adding anything", order.getLineItems().isEmpty());
 
         // EXECUTE

@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 public class Order {
 
+    private int orderId;
     private Integer orderNumber;
     private Date timestamp;
     private double subTotal;
@@ -16,12 +17,13 @@ public class Order {
     private Map<Item, OrderLineItem> lineItems;
     private TenderRecord tenderRecord;
 
-    public Order() {
-        lineItems = new TreeMap<>();
+    public Order(int orderId) {
+        this.orderId = orderId;
+        this.lineItems = new TreeMap<>();
 
-        subTotal = 0.00;
-        totalTax = 0.00;
-        grandTotal = 0.00;
+        this.subTotal = 0.00;
+        this.totalTax = 0.00;
+        this.grandTotal = 0.00;
     }
 
     public void addLineItem(Item item) {
@@ -39,6 +41,10 @@ public class Order {
         if (orderLineItem.getQty() <= 0) {
             lineItems.remove(item);
         }
+    }
+
+    public int getOrderId() {
+        return orderId;
     }
 
     public Integer getOrderNumber() {

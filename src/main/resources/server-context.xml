@@ -8,5 +8,6 @@
     <context:annotation-config/>
 
     <import resource="item-dao-context.xml"/>
+    <import resource="order-dao-context.xml"/>
 
 </beans>

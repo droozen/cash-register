@@ -13,9 +13,14 @@ public class SqlService {
     JdbcTemplate jdbcTemplate;
 
     private String createItemTableSql;
+    private String createOrderTableSql;
 
     public void setCreateItemTableSql(String createItemTableSql) {
         this.createItemTableSql = createItemTableSql;
+    }
+
+    public void setCreateOrderTableSql(String createOrderTableSql) {
+        this.createOrderTableSql = createOrderTableSql;
     }
 
     // TODO: This should be tested, preferably in a automated way where we could install/create a new database, run init,
@@ -28,14 +33,19 @@ public class SqlService {
 
         try {
             createItemTable();
+            createOrderTable();
         } catch (SQLException e) {
-            System.out.println("Database initialization failed");
+            logSqlException(e);
             return;
         }
     }
 
     private void createItemTable() throws SQLException {
         jdbcTemplate.execute(createItemTableSql);
+    }
+
+    private void createOrderTable() throws SQLException {
+        jdbcTemplate.execute(createOrderTableSql);
     }
 
     private void logSqlException(SQLException e) {
