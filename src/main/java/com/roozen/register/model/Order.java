@@ -19,6 +19,18 @@ public class Order {
 
     public Order(int orderId) {
         this.orderId = orderId;
+        this.timestamp = new Date();
+        this.lineItems = new TreeMap<>();
+
+        this.subTotal = 0.00;
+        this.totalTax = 0.00;
+        this.grandTotal = 0.00;
+    }
+
+    public Order(int orderId, int orderNumber, Date timestamp) {
+        this.orderId = orderId;
+        this.orderNumber = orderNumber;
+        this.timestamp = timestamp;
         this.lineItems = new TreeMap<>();
 
         this.subTotal = 0.00;

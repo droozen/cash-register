@@ -11,7 +11,7 @@
         <property name="getMaxOrderIdSql">
             <value>
                 <![CDATA[
-                    SELECT MAX(id) FROM orders
+                    SELECT COALESCE(MAX(id), 0) FROM orders
                 ]]>
             </value>
         </property>
@@ -20,6 +20,15 @@
                 <![CDATA[
                     INSERT INTO orders (id, subtotal, tax, grandtotal, timestamp)
                     VALUES (:id, :subtotal, :tax, :grandtotal, SYSDATE())
+                ]]>
+            </value>
+        </property>
+        <property name="findOrderSql">
+            <value>
+                <![CDATA[
+                    SELECT id, orderno, subtotal, tax, grandtotal, timestamp
+                    FROM orders
+                    WHERE id = :id
                 ]]>
             </value>
         </property>

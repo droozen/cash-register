@@ -15,29 +15,26 @@
             <div style="width: 300px; display: table-cell;">
 
                 <div ng-repeat="theItem in myData.items">
-                    <a ng-click="selectItem({{theItem.name}})">
+                    <a ng-click="selectItem('{{theItem.name}}')">
                         {{theItem.name}}, {{theItem.price}}
                     </a>
                 </div>
 
             </div>
             <div style="display: table-cell;">
-
                 <div>
-                    <div style="height: 500px;">
+                    <div>
                         <div ng-repeat="lineItem in orderData.lineItems">
-                            <a ng-click="selectLineItem({{lineItem.name}})">
-                                {{lineItem.name}}, {{lineItem.extendedPrice}}
-                            </a>
+                            <div>{{lineItem.type.name}}, {{lineItem.qty}} x {{lineItem.price}}</div>
+                            <div>----- {{lineItem.extendedPrice}}</div>
                         </div>
                     </div>
-                    <div style="height: 100px;">
-                        <div>{{orderData.subTotal}}</div>
-                        <div>{{orderData.totalTax}}</div>
-                        <div>{{orderData.grandTotal}}</div>
+                    <div>
+                        <div>Sub Total: {{orderData.subTotal}}</div>
+                        <div>Tax: {{orderData.totalTax}}</div>
+                        <div>Grand Total: {{orderData.grandTotal}}</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -48,12 +45,12 @@
 
     angular.module("myapp", [])
             .controller("OrderController", function ($scope, $http) {
-                console.log("Fetching items");
                 $scope.myData = {};
                 $scope.orderData = {};
 
                 $http.get('/controller/item/list').then(
                         function (response) {
+                            console.log("Found items");
                             $scope.myData.items = response.data;
                         },
 
@@ -64,22 +61,19 @@
 
                 $http.get('/controller/order/new').then(
                         function (response) {
+                            console.log("Found new order");
                             $scope.orderData = response.data;
                         }
                 )
 
                 $scope.selectItem = function (itemSelected) {
-                    $http.get('/controller/order/select', {order: order, item: itemSelected}).then(
+                    $http.get('/controller/order/select', {order: $scope.orderData.orderId, item: itemSelected}).then(
                             function (response) {
                                 $scope.myData.order.items = response.data;
                             }
                     );
                 };
             });
-
-    function selectItem() {
-
-    }
 </script>
 
 </body>

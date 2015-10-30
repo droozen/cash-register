@@ -17,6 +17,15 @@
                 ]]>
             </value>
         </property>
+        <property name="findItemSql">
+            <value>
+                <![CDATA[
+                    SELECT name, price
+                    FROM item
+                    WHERE name = :name
+                ]]>
+            </value>
+        </property>
 
     </bean>
 </beans>
