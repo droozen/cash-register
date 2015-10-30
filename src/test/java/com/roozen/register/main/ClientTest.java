@@ -1,10 +1,18 @@
-package com.roozen.register.command;
+package com.roozen.register.main;
 
-import com.roozen.register.services.SqlService;
+import com.roozen.register.service.SqlService;
 import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ClientTest {
+
+    Client client;
+
+    @Before
+    public void setUp() {
+        client = new Client();
+    }
 
     @Test
     public void testInit() {
@@ -12,11 +20,12 @@ public class ClientTest {
 
         SqlService mockService = EasyMock.createMock(SqlService.class);
         mockService.init();
+        client.sqlService = mockService;
 
         EasyMock.replay(mockService);
 
         // EXECUTE
-        Client.executeCommands(inputCommands, mockService);
+        client.executeCommands(inputCommands);
 
         // VERIFY
         EasyMock.verify(mockService);
