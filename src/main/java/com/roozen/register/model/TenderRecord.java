@@ -8,6 +8,12 @@ public class TenderRecord {
     private double changeGiven;
     private Date timestamp;
 
+    public TenderRecord(double amountTendered, double grandTotal) {
+        this.amountTendered = amountTendered;
+        this.changeGiven = Math.round((amountTendered - grandTotal) * 100.0) / 100.0;
+        this.timestamp = new Date();
+    }
+
     public TenderRecord(double amountTendered, double changeGiven, Date timestamp) {
         this.amountTendered = amountTendered;
         this.changeGiven = changeGiven;
