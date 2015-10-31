@@ -9,6 +9,10 @@ import javax.sql.DataSource;
 
 import static org.junit.Assert.*;
 
+/**
+ * This is a test class for the item dao, mocking out the jdbcTemplate.
+ * Other test classes can be configured to run against a clean db schema.
+ */
 public class ItemDaoMockTest {
 
     MockJdbcTemplate mockTemplate;

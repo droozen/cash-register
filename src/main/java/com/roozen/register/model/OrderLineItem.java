@@ -20,7 +20,7 @@ public class OrderLineItem {
         this.extendedPrice = 0.00;
     }
 
-    public OrderLineItem(Item type, int qty, double price) {
+    public OrderLineItem(Item type, int qty, double price, double extendedPrice) {
         if (type == null) {
             throw new NullPointerException("Cannot instantiate a line item with null object");
         }
@@ -28,7 +28,7 @@ public class OrderLineItem {
         this.qty = qty;
         this.type = type;
         this.price = price;
-        setExtendedPrice();
+        this.extendedPrice = extendedPrice;
     }
 
     public void add() {

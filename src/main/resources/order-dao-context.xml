@@ -18,15 +18,15 @@
         <property name="createNewOrderSql">
             <value>
                 <![CDATA[
-                    INSERT INTO orders (id, subtotal, tax, grandtotal)
-                    VALUES (:id, :subtotal, :tax, :grandtotal)
+                    INSERT INTO orders (id, subtotal, tax, grandtotal, status_cd)
+                    VALUES (:id, :subtotal, :tax, :grandtotal, :statusCode)
                 ]]>
             </value>
         </property>
         <property name="findOrderSql">
             <value>
                 <![CDATA[
-                    SELECT id, orderno, subtotal, tax, grandtotal, timestamp
+                    SELECT id, orderno, subtotal, tax, grandtotal, status_cd, timestamp
                     FROM orders
                     WHERE id = :id
                 ]]>
@@ -35,7 +35,7 @@
         <property name="findLineItemsSql">
             <value>
                 <![CDATA[
-                    SELECT oli.order_id, oli.item_id, item.name, oli.qty, oli.price
+                    SELECT oli.order_id, oli.item_id, item.name, oli.qty, oli.price, oli.extended_price
                     FROM order_line_item oli
                     JOIN item item on (item.id = oli.item_id)
                     WHERE order_id = :id
@@ -62,8 +62,8 @@
         <property name="insertLineItemSql">
             <value>
                 <![CDATA[
-                    INSERT INTO order_line_item (order_id, item_id, qty, price)
-                    VALUES (:id, :item_id, :qty, :price)
+                    INSERT INTO order_line_item (order_id, item_id, qty, price, extended_price)
+                    VALUES (:id, :item_id, :qty, :price, :extendedPrice)
                 ]]>
             </value>
         </property>
@@ -75,6 +75,7 @@
                       , subtotal = :subtotal
                       , tax = :tax
                       , grandtotal = :grandtotal
+                      , status_cd = :statusCode
                     WHERE id = :id
                 ]]>
             </value>

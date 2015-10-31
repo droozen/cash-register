@@ -31,6 +31,7 @@
                             TAX         DECIMAL(32,2)   NOT NULL,
                             GRANDTOTAL  DECIMAL(32,2)   NOT NULL,
                             ORDERNO     INT             NULL,
+                            STATUS_CD   VARCHAR(10)     NOT NULL,
                             TIMESTAMP   TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                             PRIMARY KEY (ID)
                         )
@@ -44,10 +45,11 @@
                 <![CDATA[
                     CREATE TABLE IF NOT EXISTS order_line_item
                         (
-                            ORDER_ID    INT             NOT NULL,
-                            ITEM_ID     VARCHAR(255)    NOT NULL,
-                            QTY         INT             NOT NULL,
-                            PRICE       DECIMAL(32,2)   NOT NULL,
+                            ORDER_ID        INT             NOT NULL,
+                            ITEM_ID         VARCHAR(255)    NOT NULL,
+                            QTY             INT             NOT NULL,
+                            PRICE           DECIMAL(32,2)   NOT NULL,
+                            EXTENDED_PRICE  DECIMAL(32,2)   NOT NULL,
                             PRIMARY KEY (ORDER_ID, ITEM_ID)
                         )
                 ]]>

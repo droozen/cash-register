@@ -7,12 +7,17 @@ import java.util.TreeMap;
 
 public class Order {
 
+    public enum StatusCode {
+        INPROGRESS, UNPAID, PAID;
+    }
+
     private int orderId;
     private Integer orderNumber;
     private Date timestamp;
     private double subTotal;
     private double totalTax;
     private double grandTotal;
+    private StatusCode statusCode;
 
     private Map<Item, OrderLineItem> lineItems;
     private TenderRecord tenderRecord;
@@ -26,17 +31,21 @@ public class Order {
         this.subTotal = 0.00;
         this.totalTax = 0.00;
         this.grandTotal = 0.00;
+        this.statusCode = StatusCode.INPROGRESS;
     }
 
-    public Order(int orderId, Integer orderNumber, Date timestamp) {
+    public Order(int orderId, Integer orderNumber, String statusCode, Date timestamp) {
         this.orderId = orderId;
         this.orderNumber = orderNumber;
         this.timestamp = timestamp;
+        this.statusCode = StatusCode.valueOf(statusCode);
+
         this.lineItems = new TreeMap<>();
 
         this.subTotal = 0.00;
         this.totalTax = 0.00;
         this.grandTotal = 0.00;
+        this.statusCode = StatusCode.INPROGRESS;
     }
 
     public void addAllLineItems(Collection<OrderLineItem> items) {
@@ -127,6 +136,14 @@ public class Order {
     // TODO: Consider letting the Order object fetch the tax rate from a third party to avoid mistakes missing setting it on this object.
     public void setTaxRate(Double taxRate) {
         this.taxRate = taxRate;
+    }
+
+    public void setStatusCode(StatusCode statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public StatusCode getStatusCode() {
+        return this.statusCode;
     }
 
     public Collection<OrderLineItem> getLineItems() {

@@ -86,6 +86,7 @@ public class OrderDao {
         parameters.put("subtotal", order.getSubTotal());
         parameters.put("tax", order.getTotalTax());
         parameters.put("grandtotal", order.getGrandTotal());
+        parameters.put("statusCode", order.getStatusCode().name());
 
         jdbcTemplate.update(createNewOrderSql, parameters);
 
@@ -122,6 +123,7 @@ public class OrderDao {
         parameters.put("subtotal", order.getSubTotal());
         parameters.put("tax", order.getTotalTax());
         parameters.put("grandtotal", order.getGrandTotal());
+        parameters.put("statusCode", order.getStatusCode().name());
 
         jdbcTemplate.update(updateOrderSql, parameters);
 
@@ -178,6 +180,7 @@ public class OrderDao {
         parameters.put("name", item.getName());
         parameters.put("qty", item.getQty());
         parameters.put("price", item.getPrice());
+        parameters.put("extendedPrice", item.getExtendedPrice());
         return parameters;
     }
 
@@ -200,8 +203,9 @@ public class OrderDao {
                 Integer orderNumber = resultSet.getInt("orderno");
                 orderNumber = (resultSet.wasNull() ? null : orderNumber);
                 Date timestamp = resultSet.getDate("timestamp");
+                String statusCode = resultSet.getString("status_cd");
 
-                orders.add(new Order(id, orderNumber, timestamp));
+                orders.add(new Order(id, orderNumber, statusCode, timestamp));
             }
         });
 
@@ -217,12 +221,13 @@ public class OrderDao {
                 String itemName = resultSet.getString("name");
                 double price = resultSet.getDouble("price");
                 int qty = resultSet.getInt("qty");
+                double extendedPrice = resultSet.getDouble("extended_price");
 
                 // TODO: Do we care to keep the item price sanitized in the Item object in memory here?
                 // (e.g. the item price could have changed since we last looked at this order)
                 // But we are using the correct order_line_item.price
                 Item item = new Item(itemId, itemName, price);
-                lineItems.add(new OrderLineItem(item, qty, price));
+                lineItems.add(new OrderLineItem(item, qty, price, extendedPrice));
             }
         });
         order.addAllLineItems(lineItems);
@@ -267,6 +272,7 @@ public class OrderDao {
     public Order completeOrder(Integer orderId, Double tender) {
         Order order = findOrder(orderId);
         order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
+        order.setStatusCode(Order.StatusCode.PAID);
 
         updateOrder(order);
         return order;

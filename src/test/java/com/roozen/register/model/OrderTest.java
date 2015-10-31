@@ -17,7 +17,8 @@ public class OrderTest {
         final Item pizza = new Item(0, pizzaName, 5.00);
         final Item sandwich = new Item(1, sandwichName, 4.95);
 
-        Order order = new Order(0);
+        final Order order = new Order(0);
+        order.setTaxRate(0.06125);
         assertTrue("We have line items before adding anything", order.getLineItems().isEmpty());
 
         // EXECUTE
@@ -41,6 +42,8 @@ public class OrderTest {
             assertEquals(4.95, secondItem.getPrice(), 0.01);
 
             assertEquals(14.95, order.getSubTotal(), 0.01);
+            assertEquals(0.92, order.getTotalTax(), 0.01);
+            assertEquals(15.87, order.getGrandTotal(), 0.01);
         }
 
         // EXECUTE
@@ -61,6 +64,8 @@ public class OrderTest {
             assertFalse("We should have removed all of the sandwiches", iterator.hasNext());
 
             assertEquals(5.00, order.getSubTotal(), 0.01);
+            assertEquals(0.31, order.getTotalTax(), 0.01);
+            assertEquals(5.31, order.getGrandTotal(), 0.01);
         }
     }
 }
