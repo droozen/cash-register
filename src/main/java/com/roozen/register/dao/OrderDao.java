@@ -97,12 +97,11 @@ public class OrderDao {
     }
 
     // TODO: Test and confirm that @Transactional is good enough to make this happen in a single transaction.
-    public synchronized Order addItem(Integer orderId, Integer itemId) {
+    public Order addItem(Integer orderId, Integer itemId) {
         Assert.notNull(orderId);
         Assert.notNull(itemId);
 
         Order order = findOrder(orderId);
-        order.setTaxRate(taxDao.findSalesTaxRate());
         Item item = itemDao.findItem(itemId);
 
         order.addLineItem(item);
@@ -208,6 +207,7 @@ public class OrderDao {
 
         Assert.isTrue(orders.size() > 0);
         final Order order = orders.get(0);
+        order.setTaxRate(taxDao.findSalesTaxRate());
 
         final List<OrderLineItem> lineItems = new ArrayList<>();
         jdbcTemplate.query(findLineItemsSql, parameters, new RowCallbackHandler() {
