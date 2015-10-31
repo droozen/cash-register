@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 import static org.junit.Assert.*;
 
-public class ItemDaoTest {
+public class ItemDaoMockTest {
 
     MockJdbcTemplate mockTemplate;
     ItemDao itemDao;

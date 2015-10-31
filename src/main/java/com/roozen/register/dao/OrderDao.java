@@ -25,6 +25,9 @@ public class OrderDao {
     @Autowired
     ItemDao itemDao;
 
+    @Autowired
+    TaxDao taxDao;
+
     private String createNewOrderSql;
     private String getMaxOrderIdSql;
     private String findOrderSql;
@@ -33,6 +36,8 @@ public class OrderDao {
 
     private String insertLineItemSql;
     private String deleteLineItemsSql;
+    private String updateOrderSql;
+    private String insertTenderRecordSql;
 
     public void setCreateNewOrderSql(String createNewOrderSql) {
         this.createNewOrderSql = createNewOrderSql;
@@ -62,10 +67,19 @@ public class OrderDao {
         this.deleteLineItemsSql = deleteLineItemsSql;
     }
 
+    public void setUpdateOrderSql(String updateOrderSql) {
+        this.updateOrderSql = updateOrderSql;
+    }
+
+    public void setInsertTenderRecordSql(String insertTenderRecordSql) {
+        this.insertTenderRecordSql = insertTenderRecordSql;
+    }
+
     public synchronized Order createNewOrder() {
         int maxId = getMaxOrderId();
 
         Order order = new Order(maxId + 1);
+        order.setTaxRate(taxDao.findSalesTaxRate());
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", order.getOrderId());
@@ -85,6 +99,7 @@ public class OrderDao {
     // TODO: Test and confirm that @Transactional is good enough to make this happen in a single transaction.
     public synchronized Order addItem(Integer orderId, Integer itemId) {
         Order order = findOrder(orderId);
+        order.setTaxRate(taxDao.findSalesTaxRate());
         Item item = itemDao.findItem(itemId);
 
         order.addLineItem(item);
@@ -96,6 +111,40 @@ public class OrderDao {
     private void updateOrder(Order order) {
         deleteLineItems(order);
         insertLineItems(order);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", order.getOrderId());
+        parameters.put("orderno", order.getOrderNumber());
+        parameters.put("subtotal", order.getSubTotal());
+        parameters.put("tax", order.getTotalTax());
+        parameters.put("grandtotal", order.getGrandTotal());
+
+        jdbcTemplate.update(updateOrderSql, parameters);
+
+        insertTenderRecord(order);
+    }
+
+    private void insertTenderRecord(Order order) {
+        if (order.getTenderRecord() == null) return;
+
+        final List<Boolean> recordExists = new ArrayList<>();
+        jdbcTemplate.query("select * from tender_record where order_id = " + order.getOrderId(), new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                recordExists.add(true);
+            }
+        });
+        if (recordExists.isEmpty() == false) return;
+
+        final TenderRecord record = order.getTenderRecord();
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("orderId", order.getOrderId());
+        parameters.put("amount", record.getAmountTendered());
+        parameters.put("changeAmt", record.getChangeGiven());
+
+        jdbcTemplate.update(insertTenderRecordSql, parameters);
+
     }
 
     private void deleteLineItems(Order order) {
@@ -143,7 +192,8 @@ public class OrderDao {
             @Override
             public void processRow(ResultSet resultSet) throws SQLException {
                 int id = resultSet.getInt("id");
-                int orderNumber = resultSet.getInt("orderno");
+                Integer orderNumber = resultSet.getInt("orderno");
+                orderNumber = (resultSet.wasNull() ? null : orderNumber);
                 Date timestamp = resultSet.getDate("timestamp");
 
                 orders.add(new Order(id, orderNumber, timestamp));

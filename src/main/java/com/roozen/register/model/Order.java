@@ -16,6 +16,7 @@ public class Order {
 
     private Map<Item, OrderLineItem> lineItems;
     private TenderRecord tenderRecord;
+    private Double taxRate;
 
     public Order(int orderId) {
         this.orderId = orderId;
@@ -27,7 +28,7 @@ public class Order {
         this.grandTotal = 0.00;
     }
 
-    public Order(int orderId, int orderNumber, Date timestamp) {
+    public Order(int orderId, Integer orderNumber, Date timestamp) {
         this.orderId = orderId;
         this.orderNumber = orderNumber;
         this.timestamp = timestamp;
@@ -75,15 +76,20 @@ public class Order {
         for (OrderLineItem lineItem : lineItems.values()) {
             sum += lineItem.getExtendedPrice();
         }
-        subTotal = sum;
+        subTotal = roundToMoney(sum);
     }
 
     private void calculateTax() {
-        // TODO: To add tax
+        if (taxRate == null) return;
+        totalTax = roundToMoney(subTotal * taxRate);
     }
 
     private void calculateGrandTotal() {
-        grandTotal = subTotal + totalTax;
+        grandTotal = roundToMoney(subTotal + totalTax);
+    }
+
+    private double roundToMoney(double value) {
+        return Math.round(value * 100.0) / 100.0;
     }
 
     public int getOrderId() {
@@ -108,6 +114,10 @@ public class Order {
 
     public double getGrandTotal() {
         return grandTotal;
+    }
+
+    public void setTaxRate(Double taxRate) {
+        this.taxRate = taxRate;
     }
 
     public Collection<OrderLineItem> getLineItems() {

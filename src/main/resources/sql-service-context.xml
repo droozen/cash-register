@@ -15,7 +15,7 @@
                         (
                             ID     INT           NOT NULL,
                             NAME   VARCHAR(255)  NOT NULL,
-                            PRICE  DECIMAL       NOT NULL,
+                            PRICE  DECIMAL(32,2) NOT NULL,
                             PRIMARY KEY (ID)
                         )
                 ]]>
@@ -26,18 +26,19 @@
                 <![CDATA[
                     CREATE TABLE IF NOT EXISTS orders
                         (
-                            ID          INT         NOT NULL,
-                            SUBTOTAL    DECIMAL     NOT NULL,
-                            TAX         DECIMAL     NOT NULL,
-                            GRANDTOTAL  DECIMAL     NOT NULL,
-                            ORDERNO     INT         NULL,
-                            TIMESTAMP   TIMESTAMP   NOT NULL,
+                            ID          INT             NOT NULL,
+                            SUBTOTAL    DECIMAL(32,2)   NOT NULL,
+                            TAX         DECIMAL(32,2)   NOT NULL,
+                            GRANDTOTAL  DECIMAL(32,2)   NOT NULL,
+                            ORDERNO     INT             NULL,
+                            TIMESTAMP   TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                             PRIMARY KEY (ID)
                         )
                 ]]>
             </value>
         </property>
         <!-- TODO: Discuss whether we feel we need to add extended price to the table, or just recalculate it as needed -->
+        <!-- TODO: Set up foreign key relationship between the line items and the order -->
         <property name="createOrderLineItemTableSql">
             <value>
                 <![CDATA[
@@ -46,23 +47,43 @@
                             ORDER_ID    INT             NOT NULL,
                             ITEM_ID     VARCHAR(255)    NOT NULL,
                             QTY         INT             NOT NULL,
-                            PRICE       DECIMAL         NOT NULL,
+                            PRICE       DECIMAL(32,2)   NOT NULL,
                             PRIMARY KEY (ORDER_ID, ITEM_ID)
                         )
                 ]]>
             </value>
         </property>
+        <!-- TODO: Set up foreign key relationship between the tender records and the order -->
         <property name="createTenderRecordTableSql">
             <value>
                 <![CDATA[
                     CREATE TABLE IF NOT EXISTS tender_record
                         (
                             ORDER_ID    INT             NOT NULL,
-                            AMOUNT      DECIMAL         NOT NULL,
-                            CHANGE_AMT  DECIMAL         NOT NULL,
-                            TIMESTAMP   TIMESTAMP      NOT NULL,
+                            AMOUNT      DECIMAL(32,2)   NOT NULL,
+                            CHANGE_AMT  DECIMAL(32,3)   NOT NULL,
+                            TIMESTAMP   TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                             PRIMARY KEY (ORDER_ID)
                         )
+                ]]>
+            </value>
+        </property>
+        <property name="createSalesTaxTableSql">
+            <value>
+                <![CDATA[
+                    CREATE TABLE IF NOT EXISTS sales_tax
+                        (
+                            DESCRIPTION     VARCHAR(255)    NOT NULL,
+                            RATE            DECIMAL(6,4)    NOT NULL
+                        )
+                ]]>
+            </value>
+        </property>
+        <property name="populateSalesTaxSql">
+            <value>
+                <![CDATA[
+                    INSERT INTO sales_tax (description, rate)
+                    VALUES ('MY TAX', 0.0725)
                 ]]>
             </value>
         </property>

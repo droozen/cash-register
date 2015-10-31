@@ -18,8 +18,8 @@
         <property name="createNewOrderSql">
             <value>
                 <![CDATA[
-                    INSERT INTO orders (id, subtotal, tax, grandtotal, timestamp)
-                    VALUES (:id, :subtotal, :tax, :grandtotal, SYSDATE())
+                    INSERT INTO orders (id, subtotal, tax, grandtotal)
+                    VALUES (:id, :subtotal, :tax, :grandtotal)
                 ]]>
             </value>
         </property>
@@ -67,6 +67,25 @@
                 ]]>
             </value>
         </property>
-
+        <property name="updateOrderSql">
+            <value>
+                <![CDATA[
+                    UPDATE orders
+                    SET orderno = :orderno
+                      , subtotal = :subtotal
+                      , tax = :tax
+                      , grandtotal = :grandtotal
+                    WHERE id = :id
+                ]]>
+            </value>
+        </property>
+        <property name="insertTenderRecordSql">
+            <value>
+                <![CDATA[
+                    INSERT INTO tender_record (order_id, amount, change_amt)
+                    VALUES (:orderId, :amount, :changeAmt)
+                ]]>
+            </value>
+        </property>
     </bean>
 </beans>
