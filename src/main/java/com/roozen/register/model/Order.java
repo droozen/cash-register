@@ -65,6 +65,14 @@ public class Order {
         calculateTotals();
     }
 
+    public void changeQty(Item item, Integer qty) {
+        if (lineItems.containsKey(item) == false) {
+            lineItems.put(item, new OrderLineItem(item));
+        }
+        lineItems.get(item).setQty(qty);
+        calculateTotals();
+    }
+
     private void calculateTotals() {
         calculateSubTotal();
         calculateTax();
@@ -144,5 +152,4 @@ public class Order {
                 ", tenderRecord=" + tenderRecord +
                 '}';
     }
-
 }

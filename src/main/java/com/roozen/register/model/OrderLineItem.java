@@ -28,23 +28,32 @@ public class OrderLineItem {
         this.qty = qty;
         this.type = type;
         this.price = price;
-        this.extendedPrice = this.qty * this.price;
+        setExtendedPrice();
     }
 
     public void add() {
         this.qty = this.qty + 1;
-        this.extendedPrice = this.qty * this.price;
+        setExtendedPrice();
     }
 
     public void remove() {
         if (this.qty > 0) {
             this.qty = this.qty - 1;
-            this.extendedPrice = this.qty * this.price;
+            setExtendedPrice();
         }
     }
 
     public int getQty() {
         return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = Math.max(0, qty);
+        setExtendedPrice();
+    }
+
+    private void setExtendedPrice() {
+        this.extendedPrice = this.qty * this.price;
     }
 
     public double getPrice() {

@@ -98,6 +98,9 @@ public class OrderDao {
 
     // TODO: Test and confirm that @Transactional is good enough to make this happen in a single transaction.
     public synchronized Order addItem(Integer orderId, Integer itemId) {
+        Assert.notNull(orderId);
+        Assert.notNull(itemId);
+
         Order order = findOrder(orderId);
         order.setTaxRate(taxDao.findSalesTaxRate());
         Item item = itemDao.findItem(itemId);
@@ -108,7 +111,9 @@ public class OrderDao {
         return order;
     }
 
-    private void updateOrder(Order order) {
+    public void updateOrder(Order order) {
+        Assert.notNull(order);
+
         deleteLineItems(order);
         insertLineItems(order);
 
@@ -125,6 +130,7 @@ public class OrderDao {
     }
 
     private void insertTenderRecord(Order order) {
+        Assert.notNull(order);
         if (order.getTenderRecord() == null) return;
 
         final List<Boolean> recordExists = new ArrayList<>();
@@ -237,6 +243,24 @@ public class OrderDao {
             order.setTenderRecord(tenders.get(0));
         }
 
+        return order;
+    }
+
+    public Order removeItem(Integer orderId, Integer itemId) {
+        Order order = findOrder(orderId);
+        Item item = itemDao.findItem(itemId);
+        order.removeLineItem(item);
+
+        updateOrder(order);
+        return order;
+    }
+
+    public Order changeQty(Integer orderId, Integer itemId, Integer qty) {
+        Order order = findOrder(orderId);
+        Item item = itemDao.findItem(itemId);
+        order.changeQty(item, qty);
+
+        updateOrder(order);
         return order;
     }
 }
