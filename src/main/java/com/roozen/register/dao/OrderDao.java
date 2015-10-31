@@ -263,4 +263,12 @@ public class OrderDao {
         updateOrder(order);
         return order;
     }
+
+    public Order completeOrder(Integer orderId, Double tender) {
+        Order order = findOrder(orderId);
+        order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
+
+        updateOrder(order);
+        return order;
+    }
 }

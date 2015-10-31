@@ -81,7 +81,7 @@
                 <button ng-click="cancelTenderPayment()">Cancel</button>
             </div>
             <div style="display: table-cell;">
-                <button ng-click="">Tender</button>
+                <button ng-click="completeOrder()">Tender</button>
             </div>
         </div>
     </div>
@@ -166,6 +166,21 @@
                     }).then(
                             function (response) {
                                 $scope.orderData = response.data;
+                            }
+                    )
+                };
+
+                $scope.completeOrder = function () {
+                    $http.get('/controller/order/complete', {
+                        params: {
+                            order: $scope.orderData.orderId,
+                            tender: $scope.myData.tender
+                        }
+                    }).then(
+                            function (response) {
+                                $scope.orderData = response.data;
+                                $scope.myData.paymentView = false;
+                                $scope.myData.mainView = true;
                             }
                     )
                 };

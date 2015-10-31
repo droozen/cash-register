@@ -4,6 +4,7 @@ import com.roozen.register.dao.ItemDao;
 import com.roozen.register.dao.OrderDao;
 import com.roozen.register.model.Order;
 import com.roozen.register.model.TenderRecord;
+import com.roozen.register.model.view.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,55 +24,56 @@ public class OrderController {
 
     @RequestMapping("/create")
     @ResponseBody
-    public Order newOrder() {
-        return orderDao.createNewOrder();
+    public OrderView newOrder() {
+        return new OrderView(orderDao.createNewOrder());
     }
 
     @RequestMapping("/item/add")
     @ResponseBody
-    public Order addItem(@RequestParam(value = "order") Integer orderId,
+    public OrderView addItem(@RequestParam(value = "order") Integer orderId,
                          @RequestParam(value = "item") Integer itemId) {
         Assert.notNull(orderId);
         Assert.notNull(itemId);
 
-        return orderDao.addItem(orderId, itemId);
+        return new OrderView(orderDao.addItem(orderId, itemId));
     }
 
     @RequestMapping("/item/remove")
     @ResponseBody
-    public Order removeItem(@RequestParam(value = "order") Integer orderId,
+    public OrderView removeItem(@RequestParam(value = "order") Integer orderId,
                             @RequestParam(value = "item") Integer itemId) {
         Assert.notNull(orderId);
         Assert.notNull(itemId);
 
-        return orderDao.removeItem(orderId, itemId);
+        return new OrderView(orderDao.removeItem(orderId, itemId));
     }
 
     @RequestMapping("/find")
     @ResponseBody
-    public Order findOrder(@RequestParam(value = "order") Integer orderId) {
+    public OrderView findOrder(@RequestParam(value = "order") Integer orderId) {
         Assert.notNull(orderId);
 
-        return orderDao.findOrder(orderId);
+        return new OrderView(orderDao.findOrder(orderId));
     }
 
     // TODO: No requirement to be able to change qty in this manner. Is this API needed?
     @RequestMapping("/item/change")
     @ResponseBody
-    public Order changeItem(@RequestParam(value = "order") Integer orderId,
+    public OrderView changeItem(@RequestParam(value = "order") Integer orderId,
                             @RequestParam(value = "item") Integer itemId,
                             @RequestParam(value = "qty") Integer qty) {
         Assert.notNull(orderId);
         Assert.notNull(itemId);
         Assert.notNull(qty);
 
-        return orderDao.changeQty(orderId, itemId, qty);
+        return new OrderView(orderDao.changeQty(orderId, itemId, qty));
     }
 
     @RequestMapping("/tender/change")
     @ResponseBody
-    public Order changeTender(@RequestParam(value = "order") Integer orderId,
+    public OrderView changeTender(@RequestParam(value = "order") Integer orderId,
                               @RequestParam(value = "tender") Double tender) {
+        // TODO: I may not need the asserts. I think spring-boot takes care of these assertions for me.
         Assert.notNull(orderId);
         Assert.notNull(tender);
 
@@ -79,7 +81,17 @@ public class OrderController {
         Assert.isNull(order.getTenderRecord());
 
         order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
-        return order;
+        return new OrderView(order);
+    }
+
+    @RequestMapping("/complete")
+    @ResponseBody
+    public OrderView completeOrder(@RequestParam(value = "order") Integer orderId,
+                                   @RequestParam(value = "tender") Double tender) {
+        Assert.notNull(orderId);
+        Assert.notNull(tender);
+
+        return new OrderView(orderDao.completeOrder(orderId, tender));
     }
 
 }

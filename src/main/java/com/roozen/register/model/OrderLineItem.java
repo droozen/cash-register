@@ -43,10 +43,6 @@ public class OrderLineItem {
         }
     }
 
-    public int getQty() {
-        return qty;
-    }
-
     public void setQty(int qty) {
         this.qty = Math.max(0, qty);
         setExtendedPrice();
@@ -54,6 +50,10 @@ public class OrderLineItem {
 
     private void setExtendedPrice() {
         this.extendedPrice = this.qty * this.price;
+    }
+
+    public int getQty() {
+        return qty;
     }
 
     public double getPrice() {
