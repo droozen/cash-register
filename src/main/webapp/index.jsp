@@ -15,7 +15,7 @@
             <div style="width: 300px; display: table-cell;">
 
                 <div ng-repeat="theItem in myData.items">
-                    <a ng-click="selectItem(theItem.id)">
+                    <a ng-click="addItem(theItem.id)">
                         {{theItem.name}}, {{theItem.price}}
                     </a>
                 </div>
@@ -59,15 +59,15 @@
                         }
                 );
 
-                $http.get('/controller/order/new').then(
+                $http.get('/controller/order/create').then(
                         function (response) {
                             console.log("Found new order");
                             $scope.orderData = response.data;
                         }
                 )
 
-                $scope.selectItem = function (itemSelected) {
-                    $http.get('/controller/order/select/item', {
+                $scope.addItem = function (itemSelected) {
+                    $http.get('/controller/order/item/add', {
                         params: {
                             order: $scope.orderData.orderId,
                             item: itemSelected

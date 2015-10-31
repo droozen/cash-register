@@ -15,19 +15,20 @@ public class OrderController {
     @Autowired
     OrderDao orderDao;
 
-    @RequestMapping("/new")
+    @RequestMapping("/create")
     @ResponseBody
     public Order newOrder() {
         return orderDao.createNewOrder();
     }
 
-    @RequestMapping("/select/item")
+    @RequestMapping("/item/add")
     @ResponseBody
-    public Order selectItem(@RequestParam(value = "order") Integer orderId, @RequestParam(value = "item") Integer itemId) {
+    public Order addItem(@RequestParam(value = "order") Integer orderId,
+                         @RequestParam(value = "item") Integer itemId) {
         return orderDao.addItem(orderId, itemId);
     }
 
-    @RequestMapping("/find/order")
+    @RequestMapping("/find")
     @ResponseBody
     public Order findOrder(@RequestParam(value = "order") Integer orderId) {
         return orderDao.findOrder(orderId);
