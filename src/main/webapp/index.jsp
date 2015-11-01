@@ -112,7 +112,9 @@
 
     <div style="width: 100%;" ng-show="myData.ordersView">
         <div class="col-md-12" style="padding: 10px;">
-            <button ng-click="enableAll()" class="btn">ALL</button>
+            <button ng-click="toggleAll()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.all]">ALL
+            </button>
             <button ng-click="toggleInProgress()" class="btn"
                     ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.inprogress]">INPROGRESS
             </button>
@@ -150,6 +152,7 @@
                 $scope.myData = {
                     mainView: true,
                     statusFilter: {
+                        all: true,
                         inprogress: true,
                         unpaid: true,
                         paid: true
@@ -292,24 +295,37 @@
 
                 $scope.toggleInProgress = function () {
                     $scope.myData.statusFilter.inprogress = !$scope.myData.statusFilter.inprogress;
+                    updateAllStatus($scope);
                 };
 
                 $scope.toggleUnpaid = function () {
                     $scope.myData.statusFilter.unpaid = !$scope.myData.statusFilter.unpaid;
+                    updateAllStatus($scope);
                 };
 
                 $scope.togglePaid = function () {
                     $scope.myData.statusFilter.paid = !$scope.myData.statusFilter.paid;
+                    updateAllStatus($scope);
                 };
 
-                $scope.enableAll = function () {
-                    $scope.myData.statusFilter = {
-                        inprogress: true,
-                        unpaid: true,
-                        paid: true
-                    }
+                $scope.toggleAll = function () {
+                    $scope.myData.statusFilter.all = !$scope.myData.statusFilter.all;
+                    $scope.myData.statusFilter.inprogress = $scope.myData.statusFilter.all;
+                    $scope.myData.statusFilter.unpaid = $scope.myData.statusFilter.all;
+                    $scope.myData.statusFilter.paid = $scope.myData.statusFilter.all;
                 }
             });
+
+    function updateAllStatus(scope) {
+        if (scope.myData.statusFilter.unpaid &&
+                scope.myData.statusFilter.paid &&
+                scope.myData.statusFilter.inprogress) {
+            scope.myData.statusFilter.all = true;
+        } else {
+            scope.myData.statusFilter.all = false;
+        }
+    }
+
 </script>
 
 </body>
