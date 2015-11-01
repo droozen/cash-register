@@ -144,7 +144,8 @@ public class OrderDao {
 
     private void insertTenderRecord(Order order) {
         Assert.notNull(order);
-        if (order.getTenderRecord() == null) return;
+
+        jdbcTemplate.update("delete from tender_record where order_id = " + order.getOrderId(), new HashMap<>());
 
         final List<Boolean> recordExists = new ArrayList<>();
         jdbcTemplate.query("select * from tender_record where order_id = " + order.getOrderId(), new RowCallbackHandler() {

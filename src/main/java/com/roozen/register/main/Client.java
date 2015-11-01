@@ -44,7 +44,7 @@ public class Client {
     }
 
     public void executeCommands(String[] commands) throws Exception {
-        // TODO: Improve command interface so that it doesn't matter the order we send parameters. But this is fine for starting up.
+        // TODO: Improve command interface. Find argument parser library.
         String command = commands[0];
         switch (command) {
             case "init":

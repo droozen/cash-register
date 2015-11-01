@@ -164,6 +164,7 @@
                 $scope.orderData = {};
 
                 $http.get('/controller/item/list').then(
+                        // TODO: Error handling
                         function (response) {
                             console.log("Found items");
                             $scope.myData.items = response.data;

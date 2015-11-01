@@ -25,7 +25,6 @@ public class TenderController {
         Assert.notNull(tender);
 
         Order order = orderDao.findOrder(orderId);
-        Assert.isNull(order.getTenderRecord());
 
         order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
         return order;

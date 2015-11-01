@@ -110,6 +110,7 @@
                     UPDATE orders
                     SET orderno = :orderNumber
                     WHERE id = :id
+                      AND orderno IS NULL
                 ]]>
             </value>
         </property>

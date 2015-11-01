@@ -20,7 +20,7 @@
         </dependency>
 
         <!-- Spring -->
-        <!-- TODO: Exclude the dependencies spring-boot brings in that we're not explicitly using -->
+        <!-- TODO: Exclude the dependencies spring-boot brings in that we're not using -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
