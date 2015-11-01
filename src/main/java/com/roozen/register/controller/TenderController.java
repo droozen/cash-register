@@ -21,7 +21,6 @@ public class TenderController {
     @ResponseBody
     public Order changeTender(@RequestParam(value = "order") Integer orderId,
                               @RequestParam(value = "tender") Double tender) {
-        // TODO: I may not need the asserts. I think spring-boot takes care of these assertions for me.
         Assert.notNull(orderId);
         Assert.notNull(tender);
 

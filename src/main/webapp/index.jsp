@@ -105,7 +105,9 @@
                 <button ng-click="cancelTenderPayment()" class="btn">Cancel</button>
             </div>
             <div style="display: table-cell;">
-                <button ng-click="completeOrder()" class="btn">Tender</button>
+                <button ng-click="completeOrder()" class="btn"
+                        ng-disabled="!myData.tender || myData.tender < orderData.grandTotal">Tender
+                </button>
             </div>
         </div>
     </div>
