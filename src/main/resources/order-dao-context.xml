@@ -51,6 +51,22 @@
                 ]]>
             </value>
         </property>
+        <property name="findOrderHeadersSql">
+            <value>
+                <![CDATA[
+                    SELECT id, orderno, status_cd, grandtotal, timestamp
+                    FROM orders
+                    ORDER BY id asc
+                ]]>
+            </value>
+        </property>
+        <property name="findMaxOrderNumberSql">
+            <value>
+                <![CDATA[
+                    SELECT COALESCE(MAX(orderno), 0) FROM orders
+                ]]>
+            </value>
+        </property>
         <property name="deleteLineItemsSql">
             <value>
                 <![CDATA[

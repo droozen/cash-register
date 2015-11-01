@@ -3,6 +3,7 @@ package com.roozen.register.controller;
 import com.roozen.register.dao.ItemDao;
 import com.roozen.register.dao.OrderDao;
 import com.roozen.register.model.Order;
+import com.roozen.register.model.OrderHeader;
 import com.roozen.register.model.TenderRecord;
 import com.roozen.register.model.view.OrderView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/controller/order")
+// TODO: Consider splitting into two controllers, one for fetching data and one for changing data
 public class OrderController {
 
     @Autowired
@@ -54,6 +58,12 @@ public class OrderController {
         Assert.notNull(orderId);
 
         return new OrderView(orderDao.findOrder(orderId));
+    }
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public List<OrderHeader> list() {
+        return orderDao.findAllOrders();
     }
 
     // TODO: No requirement to be able to change qty in this manner. Is this API needed?

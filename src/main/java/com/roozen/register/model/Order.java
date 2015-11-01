@@ -146,6 +146,10 @@ public class Order {
         return this.statusCode;
     }
 
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
     public Collection<OrderLineItem> getLineItems() {
         return lineItems.values();
     }

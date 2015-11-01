@@ -3,6 +3,7 @@
 
 
 <head>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 </head>
 
@@ -12,6 +13,13 @@
 <div ng-controller="OrderController">
 
     <div style="width: 100%; display: table;" ng-show="myData.mainView">
+        <div style="display: table-row">
+            <div style="width: 300px; display: table-cell">
+            </div>
+            <div style="display: table-cell">
+                <button style="padding-right: 100px;" ng-click="showOrdersView()">Orders</button>
+            </div>
+        </div>
         <div style="display: table-row">
             <div style="width: 300px; display: table-cell;">
 
@@ -24,6 +32,9 @@
             </div>
             <div style="display: table-cell;">
                 <div ng-init="voidDisabled = true">
+                    <div ng-if="orderData.orderNumber">
+                        Order # {{orderData.orderNumber}}
+                    </div>
                     <div>
                         <div ng-repeat="lineItem in orderData.lineItems"
                              ng-click="selectItem(lineItem.type.id, lineItem.type.name)">
@@ -85,6 +96,29 @@
             </div>
         </div>
     </div>
+
+    <div style="width: 100%;" ng-show="myData.ordersView">
+        <button>ALL</button>
+        <button>INPROGRESS</button>
+        <button>UNPAID</button>
+        <button>PAID</button>
+        <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
+        <table>
+            <tr>
+                <th>Status</th>
+                <th>Timestamp</th>
+                <th>Order Number</th>
+                <th>Total</th>
+            </tr>
+            <tr ng-repeat="theOrder in myData.orders" ng-click="selectOrder(theOrder.orderId)">
+                <td>{{theOrder.statusCode}}</td>
+                <td>{{theOrder.timestamp}}</td>
+                <td>{{theOrder.orderNumber}}</td>
+                <td>{{theOrder.grandTotal}}</td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
 <script>
@@ -98,19 +132,22 @@
                         function (response) {
                             console.log("Found items");
                             $scope.myData.items = response.data;
-                        },
-
-                        function (error) {
-                            console.error(error);
                         }
                 );
 
-                $http.get('/controller/order/create').then(
-                        function (response) {
-                            console.log("Found new order");
-                            $scope.orderData = response.data;
-                        }
-                );
+
+                $scope.createNewOrder = function () {
+                    $http.get('/controller/order/create').then(
+                            function (response) {
+                                console.log("Found new order");
+                                $scope.orderData = response.data;
+                                $scope.myData.ordersView = false;
+                                $scope.myData.mainView = true;
+                            }
+                    );
+                };
+
+                $scope.createNewOrder();
 
                 $scope.addItem = function (itemSelected) {
                     $http.get('/controller/order/item/add', {
@@ -184,6 +221,33 @@
                             }
                     )
                 };
+
+                $scope.showOrdersView = function () {
+                    $scope.myData.mainView = false;
+                    $scope.myData.ordersView = true;
+
+                    $http.get('/controller/order/list').then(
+                            function (response) {
+                                console.log("Found Orders");
+                                $scope.myData.orders = response.data;
+                            }
+                    );
+                };
+
+                $scope.selectOrder = function (orderSelected) {
+                    $http.get('/controller/order/find', {
+                        params: {
+                            order: orderSelected
+                        }
+                    }).then(
+                            function (response) {
+                                $scope.orderData = response.data;
+                                // TODO: We need a more frameworky way to changing screens.
+                                $scope.myData.ordersView = false;
+                                $scope.myData.mainView = true;
+                            }
+                    );
+                }
             });
 </script>
 

@@ -1,9 +1,6 @@
 package com.roozen.register.dao;
 
-import com.roozen.register.model.Item;
-import com.roozen.register.model.Order;
-import com.roozen.register.model.OrderLineItem;
-import com.roozen.register.model.TenderRecord;
+import com.roozen.register.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,6 +30,8 @@ public class OrderDao {
     private String findOrderSql;
     private String findLineItemsSql;
     private String findTenderRecordsSql;
+    private String findOrderHeadersSql;
+    private String findMaxOrderNumberSql;
 
     private String insertLineItemSql;
     private String deleteLineItemsSql;
@@ -57,6 +56,14 @@ public class OrderDao {
 
     public void setFindTenderRecordsSql(String findTenderRecordsSql) {
         this.findTenderRecordsSql = findTenderRecordsSql;
+    }
+
+    public void setFindOrderHeadersSql(String findOrderHeadersSql) {
+        this.findOrderHeadersSql = findOrderHeadersSql;
+    }
+
+    public void setFindMaxOrderNumberSql(String findMaxOrderNumberSql) {
+        this.findMaxOrderNumberSql = findMaxOrderNumberSql;
     }
 
     public void setInsertLineItemSql(String insertLineItemSql) {
@@ -251,6 +258,24 @@ public class OrderDao {
         return order;
     }
 
+    public List<OrderHeader> findAllOrders() {
+        final List<OrderHeader> orderHeaders = new ArrayList<>();
+        jdbcTemplate.query(findOrderHeadersSql, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                int orderId = resultSet.getInt("id");
+                Integer orderNumber = resultSet.getInt("orderno");
+                if (resultSet.wasNull()) orderNumber = null;
+                double grandTotal = resultSet.getDouble("grandtotal");
+                String statusCode = resultSet.getString("status_cd");
+                Date timestamp = resultSet.getDate("timestamp");
+
+                orderHeaders.add(new OrderHeader(orderId, statusCode, timestamp, orderNumber, grandTotal));
+            }
+        });
+        return orderHeaders;
+    }
+
     public Order removeItem(Integer orderId, Integer itemId) {
         Order order = findOrder(orderId);
         Item item = itemDao.findItem(itemId);
@@ -269,12 +294,22 @@ public class OrderDao {
         return order;
     }
 
-    public Order completeOrder(Integer orderId, Double tender) {
+    public synchronized Order completeOrder(Integer orderId, Double tender) {
         Order order = findOrder(orderId);
         order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
         order.setStatusCode(Order.StatusCode.PAID);
 
+        int maxOrderNumber = findMaxOrderNumber();
+        int orderNumber = maxOrderNumber % 100;
+        if (orderNumber == 0) orderNumber = 1;
+        order.setOrderNumber(orderNumber);
+
         updateOrder(order);
         return order;
     }
+
+    public int findMaxOrderNumber() {
+        return jdbcTemplate.queryForObject(findMaxOrderNumberSql, new HashMap<>(), Integer.class);
+    }
+
 }
