@@ -300,7 +300,7 @@ public class OrderDao {
         order.setStatusCode(Order.StatusCode.PAID);
 
         int maxOrderNumber = findMaxOrderNumber();
-        int orderNumber = maxOrderNumber % 100;
+        int orderNumber = (maxOrderNumber + 1) % 100;
         if (orderNumber == 0) orderNumber = 1;
         order.setOrderNumber(orderNumber);
 

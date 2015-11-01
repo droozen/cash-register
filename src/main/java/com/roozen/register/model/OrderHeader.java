@@ -1,6 +1,5 @@
 package com.roozen.register.model;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 
 public class OrderHeader {
@@ -10,8 +9,6 @@ public class OrderHeader {
     private Date timestamp;
     private Integer orderNumber;
     private double grandTotal;
-
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public OrderHeader(int orderId, String statusCode, Date timestamp, Integer orderNumber, double grandTotal) {
         this.orderId = orderId;
@@ -42,7 +39,7 @@ public class OrderHeader {
         }
     }
 
-    public String getGrandTotal() {
-        return decimalFormat.format(grandTotal);
+    public double getGrandTotal() {
+        return grandTotal;
     }
 }

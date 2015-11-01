@@ -4,6 +4,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <!-- TODO: In production we should actually download a specific version of angular and serve it ourselves for more control, or at least specify a version number -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 </head>
 
@@ -25,7 +26,7 @@
 
                 <div ng-repeat="theItem in myData.items">
                     <a ng-click="addItem(theItem.id)">
-                        {{theItem.name}}, {{theItem.price}}
+                        {{theItem.name}}, {{theItem.price | currency}}
                     </a>
                 </div>
 
@@ -38,14 +39,20 @@
                     <div>
                         <div ng-repeat="lineItem in orderData.lineItems"
                              ng-click="selectItem(lineItem.type.id, lineItem.type.name)">
-                            <div>{{lineItem.type.name}}, {{lineItem.qty}} x {{lineItem.price}}</div>
-                            <div>----- {{lineItem.extendedPrice}}</div>
+                            <div>{{lineItem.type.name}}, {{lineItem.qty}} x {{lineItem.price | currency}}</div>
+                            <div>----- {{lineItem.extendedPrice | currency}}</div>
                         </div>
                     </div>
                     <div>
-                        <div>Sub Total: {{orderData.subTotal}}</div>
-                        <div>Tax: {{orderData.totalTax}}</div>
-                        <div>Grand Total: {{orderData.grandTotal}}</div>
+                        <div>Sub Total: {{orderData.subTotal | currency}}</div>
+                        <div>Tax: {{orderData.totalTax | currency}}</div>
+                        <div>Grand Total: {{orderData.grandTotal | currency}}</div>
+                        <div ng-if="orderData.tenderRecord">Amount Tendered: {{orderData.tenderRecord.amountTendered |
+                            currency}}
+                        </div>
+                        <div ng-if="orderData.tenderRecord">Change Given: {{orderData.tenderRecord.changeGiven |
+                            currency}}
+                        </div>
                         <button ng-model="button"
                                 ng-disabled="orderData.selection == undefined"
                                 ng-click="removeItem(orderData.selection.id)">Void
@@ -68,7 +75,7 @@
                 Amount Due:
             </div>
             <div style="display: table-cell;">
-                {{orderData.grandTotal}}
+                {{orderData.grandTotal | currency}}
             </div>
         </div>
         <div style="display: table-row;">
@@ -76,7 +83,7 @@
                 Amount Tendered:
             </div>
             <div style="display: table-cell;">
-                <input type="text" ng-model="myData.tender" ng-change="updateTender()">
+                $<input type="text" ng-model="myData.tender" ng-change="updateTender()">
             </div>
         </div>
         <div style="display: table-row;">
@@ -84,7 +91,7 @@
                 Change Due:
             </div>
             <dvi style="display: table-cell;">
-                {{orderData.tenderRecord.changeGiven}}
+                {{orderData.tenderRecord.changeGiven | currency}}
             </dvi>
         </div>
         <div style="display: table-row;">
@@ -98,10 +105,16 @@
     </div>
 
     <div style="width: 100%;" ng-show="myData.ordersView">
-        <button>ALL</button>
-        <button>INPROGRESS</button>
-        <button>UNPAID</button>
-        <button>PAID</button>
+        <button ng-click="enableAll()" class="btn">ALL</button>
+        <button ng-click="toggleInProgress()" class="btn"
+                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.inprogress]">INPROGRESS
+        </button>
+        <button ng-click="toggleUnpaid()" class="btn"
+                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.unpaid]">UNPAID
+        </button>
+        <button ng-click="togglePaid()" class="btn"
+                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.paid]">PAID
+        </button>
         <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
         <table>
             <tr>
@@ -110,11 +123,11 @@
                 <th>Order Number</th>
                 <th>Total</th>
             </tr>
-            <tr ng-repeat="theOrder in myData.orders" ng-click="selectOrder(theOrder.orderId)">
+            <tr ng-repeat="theOrder in myData.orders | filter:statusFilterFn" ng-click="selectOrder(theOrder.orderId)">
                 <td>{{theOrder.statusCode}}</td>
                 <td>{{theOrder.timestamp}}</td>
                 <td>{{theOrder.orderNumber}}</td>
-                <td>{{theOrder.grandTotal}}</td>
+                <td>{{theOrder.grandTotal | currency}}</td>
             </tr>
         </table>
     </div>
@@ -125,7 +138,14 @@
 
     angular.module("myapp", [])
             .controller("OrderController", function ($scope, $http) {
-                $scope.myData = {mainView: true};
+                $scope.myData = {
+                    mainView: true,
+                    statusFilter: {
+                        inprogress: true,
+                        unpaid: true,
+                        paid: true
+                    }
+                };
                 $scope.orderData = {};
 
                 $http.get('/controller/item/list').then(
@@ -247,6 +267,38 @@
                                 $scope.myData.mainView = true;
                             }
                     );
+                }
+
+                $scope.statusFilterFn = function (order) {
+                    var statusCode = order.statusCode;
+                    if (statusCode == 'INPROGRESS') {
+                        return $scope.myData.statusFilter.inprogress;
+                    } else if (statusCode == 'UNPAID') {
+                        return $scope.myData.statusFilter.unpaid;
+                    } else if (statusCode == 'PAID') {
+                        return $scope.myData.statusFilter.paid;
+                    }
+                    return false;
+                };
+
+                $scope.toggleInProgress = function () {
+                    $scope.myData.statusFilter.inprogress = !$scope.myData.statusFilter.inprogress;
+                };
+
+                $scope.toggleUnpaid = function () {
+                    $scope.myData.statusFilter.unpaid = !$scope.myData.statusFilter.unpaid;
+                };
+
+                $scope.togglePaid = function () {
+                    $scope.myData.statusFilter.paid = !$scope.myData.statusFilter.paid;
+                };
+
+                $scope.enableAll = function () {
+                    $scope.myData.statusFilter = {
+                        inprogress: true,
+                        unpaid: true,
+                        paid: true
+                    }
                 }
             });
 </script>
