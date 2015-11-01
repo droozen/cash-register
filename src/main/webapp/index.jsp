@@ -4,7 +4,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <!-- TODO: In production we should actually download a specific version of angular and serve it ourselves for more control, or at least specify a version number -->
+    <!-- TODO: In production we should actually download angular and serve it ourselves for more control -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
@@ -73,6 +73,7 @@
         </div>
     </div>
 
+    <!-- TODO: We should probably have a different controller for each view -->
     <div style="width: 100%;" ng-show="myData.paymentView">
         <h2 style="padding-bottom: 50px;">Tender Payment</h2>
 

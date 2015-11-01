@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/controller/item")
+// TODO: Consider renaming to ItemService with a corresponding url. "Controller" name may conflict with angularjs terminology.
 public class ItemController {
 
     @Autowired

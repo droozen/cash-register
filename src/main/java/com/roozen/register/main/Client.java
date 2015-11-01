@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roozen.register.service"})
 @Configuration
-@ImportResource(value = {"client-context.xml"})
+@ImportResource(value = {"client/client-context.xml"})
 // TODO: Consider putting Client, ItemLoader, and SqlService in a different module from Server.class and friends.
 public class Client {
 

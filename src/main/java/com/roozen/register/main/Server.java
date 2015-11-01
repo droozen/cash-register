@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roozen.register.controller", "com.roozen.register.dao"})
 @Configuration
-@ImportResource(value = {"server-context.xml"})
+@ImportResource(value = {"server/server-context.xml"})
 public class Server {
 
     public static void main(String args[]) {

@@ -38,6 +38,7 @@ public class TenderController {
         Assert.notNull(orderId);
         Assert.notNull(tender);
 
+        // TODO: Consider moving this method to a TenderDao
         return orderDao.completeOrder(orderId, tender);
     }
 }

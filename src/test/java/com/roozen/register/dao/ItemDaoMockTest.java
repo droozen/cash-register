@@ -37,7 +37,7 @@ public class ItemDaoMockTest {
         assertTrue(mockTemplate.wasCalled());
     }
 
-
+    // Apparently cannot create EasyMock mock for NamedParameterJdbcTemplate. Does Mockito handle this?
     class MockJdbcTemplate extends NamedParameterJdbcTemplate {
 
         private String sql;
