@@ -104,5 +104,14 @@
                 ]]>
             </value>
         </property>
+        <property name="assignOrderNumberSql">
+            <value>
+                <![CDATA[
+                    UPDATE orders
+                    SET orderno = :orderNumber
+                    WHERE id = :id
+                ]]>
+            </value>
+        </property>
     </bean>
 </beans>

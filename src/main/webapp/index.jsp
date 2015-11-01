@@ -227,7 +227,7 @@
                 // Another approach could be to do the calculation of the change here, but I thought one place in the code should own that
                 // and this isn't very expensive to do, at the moment.
                 $scope.updateTender = function () {
-                    $http.get('/controller/order/tender/change', {
+                    $http.get('/controller/tender/change', {
                         params: {
                             order: $scope.orderData.orderId,
                             tender: $scope.myData.tender
@@ -240,18 +240,26 @@
                 };
 
                 $scope.completeOrder = function () {
-                    $http.get('/controller/order/complete', {
+                    $http.get('/controller/order/assign', {
                         params: {
-                            order: $scope.orderData.orderId,
-                            tender: $scope.myData.tender
+                            order: $scope.orderData.orderId
                         }
                     }).then(
                             function (response) {
-                                $scope.orderData = response.data;
-                                $scope.myData.paymentView = false;
-                                $scope.myData.mainView = true;
+                                $http.get('/controller/tender/complete', {
+                                    params: {
+                                        order: $scope.orderData.orderId,
+                                        tender: $scope.myData.tender
+                                    }
+                                }).then(
+                                        function (response) {
+                                            $scope.orderData = response.data;
+                                            $scope.myData.paymentView = false;
+                                            $scope.myData.mainView = true;
+                                        }
+                                );
                             }
-                    )
+                    );
                 };
 
                 $scope.showOrdersView = function () {

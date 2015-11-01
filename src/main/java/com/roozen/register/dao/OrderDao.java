@@ -37,6 +37,7 @@ public class OrderDao {
     private String deleteLineItemsSql;
     private String updateOrderSql;
     private String insertTenderRecordSql;
+    private String assignOrderNumberSql;
 
     public void setCreateNewOrderSql(String createNewOrderSql) {
         this.createNewOrderSql = createNewOrderSql;
@@ -80,6 +81,10 @@ public class OrderDao {
 
     public void setInsertTenderRecordSql(String insertTenderRecordSql) {
         this.insertTenderRecordSql = insertTenderRecordSql;
+    }
+
+    public void setAssignOrderNumberSql(String assignOrderNumberSql) {
+        this.assignOrderNumberSql = assignOrderNumberSql;
     }
 
     public synchronized Order createNewOrder() {
@@ -299,11 +304,6 @@ public class OrderDao {
         order.setTenderRecord(new TenderRecord(tender, order.getGrandTotal()));
         order.setStatusCode(Order.StatusCode.PAID);
 
-        int maxOrderNumber = findMaxOrderNumber();
-        int orderNumber = (maxOrderNumber + 1) % 100;
-        if (orderNumber == 0) orderNumber = 1;
-        order.setOrderNumber(orderNumber);
-
         updateOrder(order);
         return order;
     }
@@ -312,4 +312,16 @@ public class OrderDao {
         return jdbcTemplate.queryForObject(findMaxOrderNumberSql, new HashMap<>(), Integer.class);
     }
 
+    public Boolean assignOrderNumber(Integer orderId) {
+        int maxOrderNumber = findMaxOrderNumber();
+        int orderNumber = (maxOrderNumber + 1) % 100;
+        if (orderNumber == 0) orderNumber = 1;
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("orderNumber", orderNumber);
+        parameters.put("id", orderId);
+
+        int update = jdbcTemplate.update(assignOrderNumberSql, parameters);
+        return (update == 1 ? Boolean.TRUE : Boolean.FALSE);
+    }
 }
