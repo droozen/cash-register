@@ -26,7 +26,7 @@ public class OrderController {
 
     @RequestMapping("/create")
     @ResponseBody
-    public Order newOrder() {
+    public Order createNewOrder() {
         return orderDao.createNewOrder();
     }
 
