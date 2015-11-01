@@ -133,7 +133,8 @@ public class Order {
         return grandTotal;
     }
 
-    // TODO: Consider letting the Order object fetch the tax rate from a third party to avoid mistakes missing setting it on this object.
+    // TODO: Consider letting the Order object fetch the tax rate from a third party or the sales tax to be calculated elsewhere
+    // TODO: to avoid mistakes missing setting it on this object.
     public void setTaxRate(Double taxRate) {
         this.taxRate = taxRate;
     }
