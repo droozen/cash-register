@@ -6,6 +6,12 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- TODO: In production we should actually download a specific version of angular and serve it ourselves for more control, or at least specify a version number -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+          integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+          crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body ng-app="myapp">
@@ -15,14 +21,14 @@
 
     <div style="width: 100%; display: table;" ng-show="myData.mainView">
         <div style="display: table-row">
-            <div style="width: 300px; display: table-cell">
+            <div style="display: table-cell" class="col-md-4">
             </div>
-            <div style="display: table-cell">
-                <button style="padding-right: 100px;" ng-click="showOrdersView()">Orders</button>
+            <div style="display: table-cell" class="col-md-4">
+                <button style="padding-right: 100px;" class="btn" ng-click="showOrdersView()">Orders</button>
             </div>
         </div>
         <div style="display: table-row">
-            <div style="width: 300px; display: table-cell;">
+            <div style="display: table-cell;" class="col-md-4">
 
                 <div ng-repeat="theItem in myData.items">
                     <a ng-click="addItem(theItem.id)">
@@ -31,7 +37,7 @@
                 </div>
 
             </div>
-            <div style="display: table-cell;">
+            <div style="display: table-cell;" class="col-md-4">
                 <div ng-init="voidDisabled = true">
                     <div ng-if="orderData.orderNumber">
                         Order # {{orderData.orderNumber}}
@@ -53,11 +59,11 @@
                         <div ng-if="orderData.tenderRecord">Change Given: {{orderData.tenderRecord.changeGiven |
                             currency}}
                         </div>
-                        <button ng-model="button"
+                        <button class="btn"
                                 ng-disabled="orderData.selection == undefined"
                                 ng-click="removeItem(orderData.selection.id)">Void
                         </button>
-                        <button ng-model="button" ng-click="tenderPayment()">Pay Now</button>
+                        <button class="btn" ng-click="tenderPayment()">Pay Now</button>
                     </div>
                     <div style="padding-top: 20px;" ng-if="orderData.selection">
                         Selected: {{orderData.selection.name}}
@@ -96,27 +102,30 @@
         </div>
         <div style="display: table-row;">
             <div style="display: table-cell;">
-                <button ng-click="cancelTenderPayment()">Cancel</button>
+                <button ng-click="cancelTenderPayment()" class="btn">Cancel</button>
             </div>
             <div style="display: table-cell;">
-                <button ng-click="completeOrder()">Tender</button>
+                <button ng-click="completeOrder()" class="btn">Tender</button>
             </div>
         </div>
     </div>
 
     <div style="width: 100%;" ng-show="myData.ordersView">
-        <button ng-click="enableAll()" class="btn">ALL</button>
-        <button ng-click="toggleInProgress()" class="btn"
-                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.inprogress]">INPROGRESS
-        </button>
-        <button ng-click="toggleUnpaid()" class="btn"
-                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.unpaid]">UNPAID
-        </button>
-        <button ng-click="togglePaid()" class="btn"
-                ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.paid]">PAID
-        </button>
-        <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
-        <table>
+        <div class="col-md-12" style="padding: 10px;">
+            <button ng-click="enableAll()" class="btn">ALL</button>
+            <button ng-click="toggleInProgress()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.inprogress]">INPROGRESS
+            </button>
+            <button ng-click="toggleUnpaid()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.unpaid]">UNPAID
+            </button>
+            <button ng-click="togglePaid()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.paid]">PAID
+            </button>
+            <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
+        </div>
+
+        <table class="col-md-12 table">
             <tr>
                 <th>Status</th>
                 <th>Timestamp</th>
@@ -267,7 +276,7 @@
                                 $scope.myData.mainView = true;
                             }
                     );
-                }
+                };
 
                 $scope.statusFilterFn = function (order) {
                     var statusCode = order.statusCode;
