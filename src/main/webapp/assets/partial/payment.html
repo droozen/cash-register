@@ -1,0 +1,41 @@
+<div ng-controller="PaymentController">
+    <!-- TODO: We should probably have a different controller for each view -->
+    <div style="width: 100%;">
+        <h2 style="padding-bottom: 50px;">Tender Payment</h2>
+
+        <div style="display: table-row">
+            <div style="display: table-cell;">
+                Amount Due:
+            </div>
+            <div style="display: table-cell;">
+                {{orderData.grandTotal | currency}}
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell;">
+                Amount Tendered:
+            </div>
+            <div style="display: table-cell;">
+                $<input type="text" ng-model="myData.tender" ng-change="updateTender()">
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell;">
+                Change Due:
+            </div>
+            <dvi style="display: table-cell;">
+                {{orderData.tenderRecord.changeGiven | currency}}
+            </dvi>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell;">
+                <button ng-click="cancelTenderPayment()" class="btn">Cancel</button>
+            </div>
+            <div style="display: table-cell;">
+                <button ng-click="completeOrder()" class="btn"
+                        ng-disabled="!myData.tender || myData.tender < orderData.grandTotal">Tender
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

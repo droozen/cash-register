@@ -1,0 +1,56 @@
+<div ng-controller="MainController">
+
+    <div style="width: 100%; display: table;">
+        <div style="display: table-row">
+            <div style="display: table-cell" class="col-md-4">
+            </div>
+            <div style="display: table-cell" class="col-md-4">
+                <button style="padding-right: 100px;" class="btn" ng-click="showOrdersView()">Orders</button>
+            </div>
+        </div>
+        <div style="display: table-row">
+            <div style="display: table-cell;" class="col-md-4">
+
+                <div ng-repeat="theItem in myData.items">
+                    <a ng-click="addItem(theItem.id)">
+                        {{theItem.name}}, {{theItem.price | currency}}
+                    </a>
+                </div>
+
+            </div>
+            <div style="display: table-cell;" class="col-md-4">
+                <div ng-init="voidDisabled = true">
+                    <div ng-if="orderData.orderNumber">
+                        Order # {{orderData.orderNumber}}
+                    </div>
+                    <div>
+                        <div ng-repeat="lineItem in orderData.lineItems"
+                             ng-click="selectItem(lineItem.type.id, lineItem.type.name)">
+                            <div>{{lineItem.type.name}}, {{lineItem.qty}} x {{lineItem.price | currency}}</div>
+                            <div>----- {{lineItem.extendedPrice | currency}}</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>Sub Total: {{orderData.subTotal | currency}}</div>
+                        <div>Tax: {{orderData.totalTax | currency}}</div>
+                        <div>Grand Total: {{orderData.grandTotal | currency}}</div>
+                        <div ng-if="orderData.tenderRecord">Amount Tendered: {{orderData.tenderRecord.amountTendered |
+                            currency}}
+                        </div>
+                        <div ng-if="orderData.tenderRecord">Change Given: {{orderData.tenderRecord.changeGiven |
+                            currency}}
+                        </div>
+                        <button class="btn"
+                                ng-disabled="orderData.selection == undefined"
+                                ng-click="removeItem(orderData.selection.id)">Void
+                        </button>
+                        <button class="btn" ng-click="tenderPayment()">Pay Now</button>
+                    </div>
+                    <div style="padding-top: 20px;" ng-if="orderData.selection">
+                        Selected: {{orderData.selection.name}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

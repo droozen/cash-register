@@ -1,0 +1,34 @@
+<div ng-controller="OrderController">
+    <div style="width: 100%;">
+        <div class="col-md-12" style="padding: 10px;">
+            <button ng-click="toggleAll()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.all]">ALL
+            </button>
+            <button ng-click="toggleInProgress()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.inprogress]">INPROGRESS
+            </button>
+            <button ng-click="toggleUnpaid()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.unpaid]">UNPAID
+            </button>
+            <button ng-click="togglePaid()" class="btn"
+                    ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.paid]">PAID
+            </button>
+            <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
+        </div>
+
+        <table class="col-md-12 table">
+            <tr>
+                <th>Status</th>
+                <th>Timestamp</th>
+                <th>Order Number</th>
+                <th>Total</th>
+            </tr>
+            <tr ng-repeat="theOrder in myData.orders | filter:statusFilterFn" ng-click="selectOrder(theOrder.orderId)">
+                <td>{{theOrder.statusCode}}</td>
+                <td>{{theOrder.timestamp}}</td>
+                <td>{{theOrder.orderNumber}}</td>
+                <td>{{theOrder.grandTotal | currency}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
