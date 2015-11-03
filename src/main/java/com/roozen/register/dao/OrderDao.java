@@ -216,7 +216,7 @@ public class OrderDao {
                 int id = resultSet.getInt("id");
                 Integer orderNumber = resultSet.getInt("orderno");
                 orderNumber = (resultSet.wasNull() ? null : orderNumber);
-                Date timestamp = resultSet.getDate("timestamp");
+                Date timestamp = resultSet.getTimestamp("timestamp");
                 String statusCode = resultSet.getString("status_cd");
 
                 orders.add(new Order(id, orderNumber, statusCode, timestamp));
@@ -252,7 +252,7 @@ public class OrderDao {
             public void processRow(ResultSet resultSet) throws SQLException {
                 double amount = resultSet.getDouble("amount");
                 double changeAmount = resultSet.getDouble("change_amt");
-                Date timestamp = resultSet.getDate("timestamp");
+                Date timestamp = resultSet.getTimestamp("timestamp");
 
                 tenders.add(new TenderRecord(amount, changeAmount, timestamp));
             }
@@ -275,7 +275,7 @@ public class OrderDao {
                 if (resultSet.wasNull()) orderNumber = null;
                 double grandTotal = resultSet.getDouble("grandtotal");
                 String statusCode = resultSet.getString("status_cd");
-                Date timestamp = resultSet.getDate("timestamp");
+                Date timestamp = resultSet.getTimestamp("timestamp");
 
                 orderHeaders.add(new OrderHeader(orderId, statusCode, timestamp, orderNumber, grandTotal));
             }

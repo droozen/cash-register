@@ -1,5 +1,5 @@
 <div ng-controller="OrderController">
-    <div style="width: 100%;">
+    <div class="container-fluid col-md-12">
         <div class="col-md-12" style="padding: 10px;">
             <button ng-click="toggleAll()" class="btn"
                     ng-class="{true: 'btn-primary', false: 'btn-danger'}[myData.statusFilter.all]">ALL
@@ -16,7 +16,7 @@
             <button style="float: right;" ng-click="createNewOrder()">NEW ORDER</button>
         </div>
 
-        <table class="col-md-12 table">
+        <table class="col-md-10 table">
             <tr>
                 <th>Status</th>
                 <th>Timestamp</th>
@@ -25,7 +25,7 @@
             </tr>
             <tr ng-repeat="theOrder in myData.orders | filter:statusFilterFn" ng-click="selectOrder(theOrder.orderId)">
                 <td>{{theOrder.statusCode}}</td>
-                <td>{{theOrder.timestamp}}</td>
+                <td>{{theOrder.timestamp | date : 'dd-MM-yyyy HH:mm:ss'}}</td>
                 <td>{{theOrder.orderNumber}}</td>
                 <td>{{theOrder.grandTotal | currency}}</td>
             </tr>

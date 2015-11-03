@@ -1,29 +1,24 @@
 <div ng-controller="MainController">
 
-    <div style="width: 100%; display: table;">
-        <div style="display: table-row">
-            <div style="display: table-cell" class="col-md-4">
-            </div>
-            <div style="display: table-cell" class="col-md-4">
-                <button style="padding-right: 100px;" class="btn" ng-click="showOrdersView()">Orders</button>
-            </div>
-        </div>
-        <div style="display: table-row">
-            <div style="display: table-cell;" class="col-md-4">
+    <div style="width: 100%; display: table;" class="container-fluid">
+        <div style="display: table-row;">
+            <div style="display: table-cell; margin-top: 20px;" class="col-md-8">
 
                 <div ng-repeat="theItem in myData.items">
-                    <a ng-click="addItem(theItem.id)">
-                        {{theItem.name}}, {{theItem.price | currency}}
-                    </a>
+                    <button ng-click="addItem(theItem.id)" class="btn col-md-2" style="margin: 2px;">
+                        {{theItem.name}}<br/> {{theItem.price | currency}}
+                    </button>
                 </div>
 
             </div>
-            <div style="display: table-cell;" class="col-md-4">
+            <div style="display: table-cell; margin-top: 20px; margin-left: 10px;" class="col-md-2">
+                <button style="padding-right: 100px;" class="btn" ng-click="showOrdersView()">Orders</button>
                 <div ng-init="voidDisabled = true">
                     <div ng-if="orderData.orderNumber">
                         Order # {{orderData.orderNumber}}
                     </div>
-                    <div>
+                    <!-- TODO: Put these styles in classes in a css file -->
+                    <div class="container-fluid" style="min-height: 100px; max-height: 300px; overflow-y: auto;">
                         <div ng-repeat="lineItem in orderData.lineItems"
                              ng-click="selectItem(lineItem.type.id, lineItem.type.name)">
                             <div>{{lineItem.type.name}}, {{lineItem.qty}} x {{lineItem.price | currency}}</div>
