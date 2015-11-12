@@ -19,6 +19,12 @@
             <version>5.1.37</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+
         <!-- Spring -->
         <!-- TODO: Exclude the dependencies spring-boot brings in that we're not using -->
         <dependency>
@@ -38,25 +44,11 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
-
-        <!-- Test -->
-        <!-- TODO: Consider learning Mockito, as I've heard good things and it comes with spring-boot-starter-test -->
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>3.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

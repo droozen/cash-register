@@ -4,7 +4,6 @@ import com.roozen.register.dao.ItemDao;
 import com.roozen.register.dao.OrderDao;
 import com.roozen.register.main.Server;
 import com.roozen.register.model.Order;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Server.class})
@@ -39,22 +39,21 @@ public class OrderControllerTest {
         // @Transactional daos cannot be appropriately tested in this context,
         // since the transaction manager will commit before it gets back to the test method.
         // Therefore, here we have to rely on mocks. We'll need another strategy to test the SQL.
-        orderController.orderDao = EasyMock.createMock(OrderDao.class);
-        orderController.itemDao = EasyMock.createMock(ItemDao.class);
+        orderController.orderDao = mock(OrderDao.class);
+        orderController.itemDao = mock(ItemDao.class);
     }
 
     @Test
     public void testCreateOrder() {
         final Order expectedOrder = new Order(123);
 
-        EasyMock.expect(orderController.orderDao.createNewOrder()).andReturn(expectedOrder);
-        EasyMock.replay(orderController.orderDao);
+        when(orderController.orderDao.createNewOrder()).thenReturn(expectedOrder);
 
         // EXECUTE
         String json = restTemplate.getForObject(baseUrl + "controller/order/create", String.class, new HashMap<>());
 
         // VERIFY
-        EasyMock.verify(orderController.orderDao);
+        verify(orderController.orderDao).createNewOrder();
 
         System.out.println(json);
         JacksonJsonParser parser = new JacksonJsonParser();

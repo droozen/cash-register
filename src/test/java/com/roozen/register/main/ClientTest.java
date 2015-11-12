@@ -2,11 +2,10 @@ package com.roozen.register.main;
 
 import com.roozen.register.service.ItemLoader;
 import com.roozen.register.service.SqlService;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.easymock.EasyMock.eq;
+import static org.mockito.Mockito.*;
 
 public class ClientTest {
 
@@ -19,57 +18,53 @@ public class ClientTest {
 
     @Test
     public void testInit() throws Exception {
+        // SETUP
         client.setAction("init");
 
-        SqlService mockService = EasyMock.createMock(SqlService.class);
-        mockService.init();
+        SqlService mockService = mock(SqlService.class);
         client.sqlService = mockService;
-
-        EasyMock.replay(mockService);
 
         // EXECUTE
         client.execute();
 
         // VERIFY
-        EasyMock.verify(mockService);
+        verify(mockService).init();
     }
 
     @Test
     public void testItems() throws Exception {
         final String testFileSource = "testFileSource";
+
+        // SETUP
         client.setAction("items");
         client.setFile(testFileSource);
 
-        ItemLoader mockLoader = EasyMock.createMock(ItemLoader.class);
-        mockLoader.loadItems(eq(testFileSource), eq(true));
+        ItemLoader mockLoader = mock(ItemLoader.class);
         client.itemLoader = mockLoader;
-
-        EasyMock.replay(mockLoader);
 
         // EXECUTE
         client.execute();
 
         // VERIFY
-        EasyMock.verify(mockLoader);
+        verify(mockLoader).loadItems(testFileSource, true);
     }
 
     @Test
     public void testItems_noHeader() throws Exception {
         final String testFileSource = "testFileSource";
+
+        // SETUP
         client.setAction("items");
         client.setFile(testFileSource);
         client.setIncludeHeader(false);
 
-        ItemLoader mockLoader = EasyMock.createMock(ItemLoader.class);
-        mockLoader.loadItems(eq(testFileSource), eq(false));
+        ItemLoader mockLoader = mock(ItemLoader.class);
         client.itemLoader = mockLoader;
-
-        EasyMock.replay(mockLoader);
 
         // EXECUTE
         client.execute();
 
         // VERIFY
-        EasyMock.verify(mockLoader);
+        verify(mockLoader).loadItems(testFileSource, false);
     }
 }
