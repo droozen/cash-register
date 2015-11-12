@@ -1,8 +1,8 @@
-package com.roozen.register.service;
+package com.roozen.register.init;
 
 import com.roozen.register.model.Item;
-import com.roozen.register.service.resource.Resource;
-import com.roozen.register.service.resource.ResourceFactory;
+import com.roozen.register.init.resource.Resource;
+import com.roozen.register.init.resource.ResourceFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;

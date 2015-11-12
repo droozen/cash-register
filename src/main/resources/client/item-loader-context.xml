@@ -7,7 +7,7 @@
 
     <context:annotation-config/>
 
-    <bean id="itemLoader" class="com.roozen.register.service.ItemLoader">
+    <bean id="itemLoader" class="com.roozen.register.init.ItemLoader">
         <property name="insertItemSql">
             <value>
                 <![CDATA[

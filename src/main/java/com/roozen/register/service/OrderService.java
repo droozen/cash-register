@@ -1,4 +1,4 @@
-package com.roozen.register.controller;
+package com.roozen.register.service;
 
 import com.roozen.register.dao.ItemDao;
 import com.roozen.register.dao.OrderDao;
@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/controller/order")
-// TODO: Consider splitting into two controllers, one for fetching data and one for changing data
-public class OrderController {
+@RequestMapping("/service/order")
+public class OrderService {
 
     @Autowired
     OrderDao orderDao;

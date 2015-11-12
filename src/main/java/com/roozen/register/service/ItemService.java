@@ -1,4 +1,4 @@
-package com.roozen.register.controller;
+package com.roozen.register.service;
 
 import com.roozen.register.dao.ItemDao;
 import com.roozen.register.model.Item;
@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/controller/item")
-// TODO: Consider renaming to ItemService with a corresponding url. "Controller" name may conflict with angularjs terminology.
-public class ItemController {
+@RequestMapping("/service/item")
+public class ItemService {
 
     @Autowired
     ItemDao itemDao;

@@ -8,6 +8,6 @@
     <context:annotation-config/>
 
     <import resource="item-loader-context.xml"/>
-    <import resource="sql-service-context.xml"/>
+    <import resource="sql-loader-context.xml"/>
 
 </beans>

@@ -1,4 +1,4 @@
-package com.roozen.register.controller;
+package com.roozen.register.service;
 
 import com.roozen.register.dao.OrderDao;
 import com.roozen.register.model.Order;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/controller/tender")
-public class TenderController {
+@RequestMapping("/service/tender")
+public class TenderService {
 
     @Autowired
     OrderDao orderDao;

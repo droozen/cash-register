@@ -1,4 +1,4 @@
-package com.roozen.register.service;
+package com.roozen.register.init;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SqlService {
+public class SqlLoader {
 
     @Autowired
     JdbcTemplate jdbcTemplate;

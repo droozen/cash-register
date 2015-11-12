@@ -1,7 +1,7 @@
-package com.roozen.register.main;
+package com.roozen.register;
 
-import com.roozen.register.service.ItemLoader;
-import com.roozen.register.service.SqlService;
+import com.roozen.register.init.ItemLoader;
+import com.roozen.register.init.SqlLoader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,8 +21,8 @@ public class ClientTest {
         // SETUP
         client.setAction("init");
 
-        SqlService mockService = mock(SqlService.class);
-        client.sqlService = mockService;
+        SqlLoader mockService = mock(SqlLoader.class);
+        client.sqlLoader = mockService;
 
         // EXECUTE
         client.execute();

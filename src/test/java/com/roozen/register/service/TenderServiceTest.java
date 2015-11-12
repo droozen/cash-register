@@ -1,7 +1,7 @@
-package com.roozen.register.controller;
+package com.roozen.register.service;
 
 import com.roozen.register.dao.OrderDao;
-import com.roozen.register.main.Server;
+import com.roozen.register.Server;
 import com.roozen.register.model.Item;
 import com.roozen.register.model.Order;
 import org.junit.Before;
@@ -26,10 +26,10 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {Server.class})
 @WebIntegrationTest
-public class TenderControllerTest {
+public class TenderServiceTest {
 
     @Autowired
-    TenderController tenderController;
+    TenderService tenderController;
 
     String baseUrl = "http://localhost:8080/";
 
@@ -52,7 +52,7 @@ public class TenderControllerTest {
 
         when(tenderController.orderDao.findOrder(1)).thenReturn(expectedOrder);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + "controller/tender/change")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl + "service/tender/change")
                 .queryParam("order", orderId)
                 .queryParam("tender", 20.00);
 

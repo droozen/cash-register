@@ -1,4 +1,4 @@
-package com.roozen.register.main;
+package com.roozen.register;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.roozen.register.controller", "com.roozen.register.dao"})
+@ComponentScan(basePackages = {"com.roozen.register.service", "com.roozen.register.dao"})
 @Configuration
 @ImportResource(value = {"server/server-context.xml"})
 public class Server {

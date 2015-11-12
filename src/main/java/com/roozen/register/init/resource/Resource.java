@@ -1,4 +1,4 @@
-package com.roozen.register.service.resource;
+package com.roozen.register.init.resource;
 
 public interface Resource {
 

@@ -1,7 +1,7 @@
-package com.roozen.register.main;
+package com.roozen.register;
 
-import com.roozen.register.service.ItemLoader;
-import com.roozen.register.service.SqlService;
+import com.roozen.register.init.ItemLoader;
+import com.roozen.register.init.SqlLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.roozen.register.service"})
+@ComponentScan(basePackages = {"com.roozen.register.init"})
 @Configuration
 @ImportResource(value = {"client/client-context.xml"})
 @EnableConfigurationProperties
@@ -22,7 +22,7 @@ import org.springframework.context.annotation.ImportResource;
 public class Client {
 
     @Autowired
-    SqlService sqlService;
+    SqlLoader sqlLoader;
 
     @Autowired
     ItemLoader itemLoader;
@@ -53,7 +53,7 @@ public class Client {
     public void execute() throws Exception {
         switch (action) {
             case "init":
-                sqlService.init();
+                sqlLoader.init();
                 break;
 
             case "items":
