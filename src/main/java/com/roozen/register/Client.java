@@ -18,7 +18,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource(value = {"client/client-context.xml"})
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "client")
-// TODO: Consider putting Client, ItemLoader, and SqlService in a different module from Server.class and friends.
+// TODO: Consider putting Client, ItemLoader, and SqlLoader in a different module from Server.class and friends.
 public class Client {
 
     @Autowired

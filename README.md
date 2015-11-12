@@ -5,7 +5,7 @@ Simple experimental cash register application.
 1. Install a mysql server locally  
 2. Set up 'root' user on mysql with password 'password'  
 3. create register database on mysql with: create database register;  
-4. Initialize the database by running main class {com.roozen.register.Client} with arguments {--client.action=init}  
+4. Initialize the database by running main class {com.roozen.register.Client} with arguments {--client.action=init} (the default action is init)
 5. Load items into the database by running main class {com.roozen.register.Client} with arguments {--client.action=items --client.file=<path/to/items.csv>}  
 6. Kick off the application by running main class {com.roozen.register.Server}  
 7. ???  
