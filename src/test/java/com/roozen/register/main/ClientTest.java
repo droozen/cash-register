@@ -19,7 +19,7 @@ public class ClientTest {
 
     @Test
     public void testInit() throws Exception {
-        final String[] inputCommands = {"init"};
+        client.setAction("init");
 
         SqlService mockService = EasyMock.createMock(SqlService.class);
         mockService.init();
@@ -28,7 +28,7 @@ public class ClientTest {
         EasyMock.replay(mockService);
 
         // EXECUTE
-        client.executeCommands(inputCommands);
+        client.execute();
 
         // VERIFY
         EasyMock.verify(mockService);
@@ -37,7 +37,8 @@ public class ClientTest {
     @Test
     public void testItems() throws Exception {
         final String testFileSource = "testFileSource";
-        final String[] inputCommands = {"items", testFileSource};
+        client.setAction("items");
+        client.setFile(testFileSource);
 
         ItemLoader mockLoader = EasyMock.createMock(ItemLoader.class);
         mockLoader.loadItems(eq(testFileSource), eq(true));
@@ -46,7 +47,7 @@ public class ClientTest {
         EasyMock.replay(mockLoader);
 
         // EXECUTE
-        client.executeCommands(inputCommands);
+        client.execute();
 
         // VERIFY
         EasyMock.verify(mockLoader);
@@ -55,7 +56,9 @@ public class ClientTest {
     @Test
     public void testItems_noHeader() throws Exception {
         final String testFileSource = "testFileSource";
-        final String[] inputCommands = {"items", testFileSource, "N"};
+        client.setAction("items");
+        client.setFile(testFileSource);
+        client.setIncludeHeader(false);
 
         ItemLoader mockLoader = EasyMock.createMock(ItemLoader.class);
         mockLoader.loadItems(eq(testFileSource), eq(false));
@@ -64,7 +67,7 @@ public class ClientTest {
         EasyMock.replay(mockLoader);
 
         // EXECUTE
-        client.executeCommands(inputCommands);
+        client.execute();
 
         // VERIFY
         EasyMock.verify(mockLoader);

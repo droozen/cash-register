@@ -5,16 +5,19 @@ import com.roozen.register.service.SqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.util.Assert;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roozen.register.service"})
 @Configuration
 @ImportResource(value = {"client/client-context.xml"})
+@EnableConfigurationProperties
+@ConfigurationProperties(prefix = "client")
 // TODO: Consider putting Client, ItemLoader, and SqlService in a different module from Server.class and friends.
 public class Client {
 
@@ -30,7 +33,7 @@ public class Client {
 
         // Execute commands
         try {
-            context.getBean(Client.class).executeCommands(args);
+            context.getBean(Client.class).execute();
         } catch (Exception e) {
             // TODO: Consider a logging framework
             e.printStackTrace();
@@ -43,26 +46,47 @@ public class Client {
         return app.run(args);
     }
 
-    public void executeCommands(String[] commands) throws Exception {
-        // TODO: Improve command interface. Find argument parser library.
-        String command = commands[0];
-        switch (command) {
+    private String action;
+    private String file;
+    private boolean includeHeader = true;
+
+    public void execute() throws Exception {
+        switch (action) {
             case "init":
                 sqlService.init();
                 break;
-            case "items":
-                Assert.isTrue(commands.length >= 2);
 
-                boolean includeHeader = true;
-                if (commands.length >= 3 && commands[2].equalsIgnoreCase("N")) {
-                    includeHeader = false;
-                }
-                itemLoader.loadItems(commands[1], includeHeader);
+            case "items":
+                itemLoader.loadItems(file, includeHeader);
                 break;
 
             default:
                 break;
         }
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public boolean isIncludeHeader() {
+        return includeHeader;
+    }
+
+    public void setIncludeHeader(boolean includeHeader) {
+        this.includeHeader = includeHeader;
     }
 
 }
