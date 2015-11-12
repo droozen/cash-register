@@ -1,7 +1,7 @@
 # cash-register
 Simple experimental cash register application.  
 
-===== SETUP =====
+===== SETUP =====  
 1. Install a mysql server locally  
 2. Set up 'root' user on mysql with password 'password'  
 3. create register database on mysql with: create database register;  
