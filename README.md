@@ -12,7 +12,9 @@ Simple experimental cash register application.
 8. Profit  
   
    Alternatively, if you don't want to provide the command line arguments, you could include a properties file on the
-classpath for spring boot with the client.<property> properties supplied in the file.
+classpath for spring boot with the client.<property> properties supplied in the file. If the items file does not include
+a header row, specify this with the property client.includeHeader=false. Otherwise, the first line in the file will be
+skipped.
   
 =================
 
