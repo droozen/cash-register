@@ -61,7 +61,7 @@ public class Client {
                 break;
 
             default:
-                break;
+                throw new RuntimeException("Client executed without an action.");
         }
     }
 

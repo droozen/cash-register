@@ -1,13 +1,14 @@
 package com.roozen.register.init;
 
-import com.roozen.register.model.Item;
 import com.roozen.register.init.resource.Resource;
 import com.roozen.register.init.resource.ResourceFactory;
+import com.roozen.register.model.Item;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -37,6 +38,8 @@ public class ItemLoader {
      */
     public void loadItems(String fileSource, boolean header) throws Exception {
         Collection<Item> items = parseItemsFromFile(fileSource, header);
+        Assert.notEmpty(items);
+
         writeItemsToDatabse(items);
     }
 
