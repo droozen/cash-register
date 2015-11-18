@@ -65,24 +65,12 @@ public class Client {
         }
     }
 
-    public String getAction() {
-        return action;
-    }
-
     public void setAction(String action) {
         this.action = action;
     }
 
-    public String getFile() {
-        return file;
-    }
-
     public void setFile(String file) {
         this.file = file;
-    }
-
-    public boolean isIncludeHeader() {
-        return includeHeader;
     }
 
     public void setIncludeHeader(boolean includeHeader) {
