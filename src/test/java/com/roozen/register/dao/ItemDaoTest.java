@@ -2,6 +2,8 @@ package com.roozen.register.dao;
 
 import com.roozen.register.Server;
 import com.roozen.register.model.Item;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Server.class)
-@TestPropertySource(locations="classpath:test.properties")
+@TestPropertySource(locations = "classpath:test.properties")
 public class ItemDaoTest {
 
     @Autowired
@@ -37,50 +39,13 @@ public class ItemDaoTest {
     NamedParameterJdbcTemplate jdbcTemplate;
 
     private static Item testItem;
-    private static final int testItemId = -1;
+    private static final int testItemId = 0;
 
-    @Test
-    public void testFindAll() throws Exception {
-        final Integer expectedCount = jdbcTemplate.queryForObject("select count(*) from item", new HashMap<>(), Integer.class);
-        assertTrue(expectedCount > 0);
-
-        // EXECUTE
-        final List<Item> items = itemDao.findAllItems();
-
-        // VERIFY
-        assertEquals(expectedCount, (Integer)items.size());
-
-        items.parallelStream().forEach(item -> {
-            assertTrue(item.getPrice() >= 0.0);
-            assertNotNull(item.getName());
-            assertTrue(item.getName().length() > 0);
-            assertTrue(item.getId() >= 0);
-        });
-    }
-
-    @Test
-    public void testFindById() throws Exception {
-        try {
-            // SETUP
-            setUpTestItem();
-
-            // EXECUTE
-            Item actualItem = itemDao.findItem(testItem.getId());
-
-            // VERIFY
-            assertEquals(testItem, actualItem);
-            assertEquals(testItem.getId(), actualItem.getId());
-            assertEquals(testItem.getName(), actualItem.getName());
-            assertEquals(testItem.getPrice(), actualItem.getPrice(), 0.01);
-        } finally {
-            tearDownTestItem();
-        }
-    }
-
-    private void setUpTestItem() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         final double inputPrice = 4.99;
 
-        Map<String,Object> parameters = new HashMap<>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", testItemId);
         parameters.put("name", "TEST1");
         parameters.put("price", inputPrice);
@@ -99,11 +64,43 @@ public class ItemDaoTest {
         testItem = items.get(0);
     }
 
-    private void tearDownTestItem() throws Exception {
-        Map<String,Object> parameters = new HashMap<>();
+    @After
+    public void tearDown() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", testItemId);
 
         jdbcTemplate.update("delete from item where id = :id", parameters);
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        final Integer expectedCount = jdbcTemplate.queryForObject("select count(*) from item", new HashMap<>(), Integer.class);
+        assertTrue(expectedCount > 0);
+
+        // EXECUTE
+        final List<Item> items = itemDao.findAllItems();
+
+        // VERIFY
+        assertEquals(expectedCount, (Integer) items.size());
+
+        items.parallelStream().forEach(item -> {
+            assertTrue(item.getPrice() >= 0.0);
+            assertNotNull(item.getName());
+            assertTrue(item.getName().length() > 0);
+            assertTrue(item.getId() >= 0);
+        });
+    }
+
+    @Test
+    public void testFindById() throws Exception {
+        // EXECUTE
+        Item actualItem = itemDao.findItem(testItem.getId());
+
+        // VERIFY
+        assertEquals(testItem, actualItem);
+        assertEquals(testItem.getId(), actualItem.getId());
+        assertEquals(testItem.getName(), actualItem.getName());
+        assertEquals(testItem.getPrice(), actualItem.getPrice(), 0.01);
     }
 
 }

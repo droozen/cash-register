@@ -1,27 +1,58 @@
 package com.roozen.register.init;
 
-import com.roozen.register.model.Item;
+import com.roozen.register.Client;
 import com.roozen.register.init.resource.Resource;
 import com.roozen.register.init.resource.ResourceFactory;
+import com.roozen.register.model.Item;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Client.class)
+@TestPropertySource(locations="classpath:test.properties")
 public class ItemLoaderTest {
 
+    @Autowired
+    ItemLoader itemLoader;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @Before
+    public void setUp() throws Exception {
+        // Start fresh
+        jdbcTemplate.execute("delete from item");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        // End clean
+        jdbcTemplate.execute("delete from item");
+    }
+
     @Test
-    public void testLoadItems() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testLoadItems() throws Exception {
         final String[] inputCsv = {"Pizza, 5.00", "Sandwich, 4.95"};
         final String inputFileSource = "myTestFileSource";
         final boolean inputHeader = true;
 
-        ItemLoader loader = new ItemLoader();
-        loader.resourceFactory = new ResourceFactory() {
+        itemLoader.resourceFactory = new ResourceFactory() {
             @Override
             public Resource getFileResource(String fileSource) {
                 assertEquals(inputFileSource, fileSource);
@@ -30,16 +61,20 @@ public class ItemLoaderTest {
         };
 
         // EXECUTE
-        Method privateMethod = ItemLoader.class.getDeclaredMethod("parseItemsFromFile", String.class, boolean.class);
-        privateMethod.setAccessible(true);
-        Object returnValue = privateMethod.invoke(loader, inputFileSource, inputHeader);
-        privateMethod.setAccessible(false);
+        itemLoader.loadItems(inputFileSource, inputHeader);
 
         // VERIFY
-        assertTrue(returnValue instanceof Collection);
+        List<Item> items = new ArrayList<>();
+        jdbcTemplate.query("select id, name, price from item", new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet resultSet) throws SQLException {
+                items.add(new Item(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getDouble("price")));
+            }
+        });
+        assertEquals(inputCsv.length, items.size());
 
-        Collection<Item> itemsList = (Collection<Item>) returnValue;
-        Iterator<Item> iterator = itemsList.iterator();
+        Iterator<Item> iterator = items.iterator();
+
         assertTrue("Missing first item", iterator.hasNext());
         {
             Item item = iterator.next();
