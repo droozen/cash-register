@@ -1,10 +1,12 @@
 package com.roozen.register.init;
 
-import com.roozen.register.model.Item;
 import com.roozen.register.init.resource.Resource;
 import com.roozen.register.init.resource.ResourceFactory;
+import com.roozen.register.model.Item;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.*;
 
 @Service
 public class ItemLoader {
+
+    Logger logger = LoggerFactory.getLogger(ItemLoader.class);
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
@@ -61,9 +65,12 @@ public class ItemLoader {
         int count = 0;
         while (StringUtils.isEmpty(line = resource.readBlock()) == false) {
             String[] split = line.split(",");
-            if (split.length != 2) throw new RuntimeException("Invalid file format");
-            if (!NumberUtils.isNumber(split[1].trim()))
-                throw new RuntimeException("Invalid file format. Price must be number.");
+            if (split.length != 2) {
+                logAndThrow("Invalid file format. Failed to load items.");
+            }
+            if (!NumberUtils.isNumber(split[1].trim())) {
+                logAndThrow("Invalid file format. Price must be a number.");
+            }
 
             items.add(new Item(count, split[0].trim(), Double.parseDouble(split[1].trim())));
             count++;
@@ -78,8 +85,8 @@ public class ItemLoader {
         try {
             return resourceFactory.getFileResource(fileSource);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException("File Not Found. Failed to load items.");
+            logAndThrow("File not found. Failed to load items.", e);
+            return null;
         }
     }
 
@@ -90,6 +97,8 @@ public class ItemLoader {
      * @param items
      */
     private void writeItemsToDatabse(Collection<Item> items) {
+        jdbcTemplate.update("delete from item", new HashMap<String, Object>());
+
         Map<String, Object>[] batchParams = new HashMap[items.size()];
 
         int index = 0;
@@ -107,5 +116,15 @@ public class ItemLoader {
         params.put("name", item.getName());
         params.put("price", item.getPrice());
         return params;
+    }
+
+    private void logAndThrow(String message) {
+        logger.error(message);
+        throw new RuntimeException(message);
+    }
+
+    private void logAndThrow(String message, Throwable e) {
+        logger.error(message);
+        throw new RuntimeException(e);
     }
 }

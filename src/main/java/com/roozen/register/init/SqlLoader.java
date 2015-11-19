@@ -1,5 +1,7 @@
 package com.roozen.register.init;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class SqlLoader {
+
+    Logger logger = LoggerFactory.getLogger(SqlLoader.class);
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -62,10 +66,9 @@ public class SqlLoader {
             createTenderRecordTable();
             createSalesTaxTable();
 
-            System.out.println("Database Initialized");
+            logger.debug("Database Initialized");
         } catch (SQLException e) {
             logSqlException(e);
-            return;
         }
     }
 
@@ -103,22 +106,7 @@ public class SqlLoader {
     }
 
     private void logSqlException(SQLException e) {
-        System.out.println(e.getMessage());
-        System.out.println(e.getErrorCode());
-        System.out.println(e.getSQLState());
-        e.printStackTrace();
-    }
-
-    private void close(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        logger.error("Error initializing database", e);
     }
 
 }
