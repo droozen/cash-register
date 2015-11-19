@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class SqlLoader {
 
-    Logger logger = LoggerFactory.getLogger(SqlLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(SqlLoader.class);
 
     @Autowired
     JdbcTemplate jdbcTemplate;

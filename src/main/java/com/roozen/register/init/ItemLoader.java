@@ -17,7 +17,7 @@ import java.util.*;
 @Service
 public class ItemLoader {
 
-    Logger logger = LoggerFactory.getLogger(ItemLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(ItemLoader.class);
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
