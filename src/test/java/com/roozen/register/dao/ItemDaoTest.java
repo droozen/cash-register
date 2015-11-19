@@ -21,8 +21,6 @@ import static org.junit.Assert.fail;
 
 /**
  * This is an integration test for the ItemDao that will actually execute database queries.
- * The ItemDao is a find only class at this time, so we don't have to worry about reverting changes.
- * However, these tests do expect some data to be populated in the item table.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Server.class)
